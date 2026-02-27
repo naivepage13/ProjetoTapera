@@ -71,6 +71,10 @@ const STORAGE_TOPICOS = "topicosForum";
 const form = document.getElementById("formTopico");
 const listaTopicos = document.getElementById("listaTopicos");
 
+// Simulação de quem está logado no momento
+// (No futuro, você pode puxar isso do localStorage do Perfil logado!)
+const MEU_USUARIO = "usuario_local_123"; 
+
 function carregarTopicos() {
     const topicos = JSON.parse(localStorage.getItem(STORAGE_TOPICOS)) || [];
     listaTopicos.innerHTML = "";
@@ -81,6 +85,26 @@ function carregarTopicos() {
     }
 
     topicos.slice().reverse().forEach((topico) => {
+        // Garantir que as listas existam (para não quebrar tópicos antigos)
+        const usuariosLike = topico.usuariosLike || [];
+        const usuariosDeslike = topico.usuariosDeslike || [];
+
+        // O total de likes é o tamanho da lista
+        const totalLikes = usuariosLike.length;
+        const totalDeslikes = usuariosDeslike.length;
+
+        // Verifica se O MEU USUÁRIO está dentro da lista de quem curtiu/descurtiu
+        const euCurti = usuariosLike.includes(MEU_USUARIO);
+        const euDescurti = usuariosDeslike.includes(MEU_USUARIO);
+
+        // Se eu curti, o botão fica preenchido e verde forte. Se não, fica vazado.
+        const iconeLike = euCurti ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up";
+        const btnClassLike = euCurti ? "btn-success" : "btn-outline-success";
+
+        // Mesma lógica para o deslike (vermelho)
+        const iconeDeslike = euDescurti ? "bi-hand-thumbs-down-fill" : "bi-hand-thumbs-down";
+        const btnClassDeslike = euDescurti ? "btn-danger" : "btn-outline-danger";
+
         const div = document.createElement("div");
         div.className = "card mb-3 shadow-sm";
 
@@ -89,10 +113,20 @@ function carregarTopicos() {
             <h5>${topico.titulo}</h5>
             <p>${topico.conteudo}</p>
             <small class="text-muted">Publicado em: ${topico.data}</small>
-            <br>
-            <button class="btn btn-sm btn-outline-danger mt-2 btn-excluir" data-id="${topico.id}">
-                <i class="bi bi-trash"></i> Excluir
-            </button>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn btn-sm ${btnClassLike} btn-like" data-id="${topico.id}">
+                        <i class="bi ${iconeLike}"></i> ${totalLikes}
+                    </button>
+                    <button class="btn btn-sm ${btnClassDeslike} btn-deslike ms-2" data-id="${topico.id}">
+                        <i class="bi ${iconeDeslike}"></i> ${totalDeslikes}
+                    </button>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary btn-excluir" data-id="${topico.id}">
+                    <i class="bi bi-trash"></i> Excluir
+                </button>
+            </div>
         </div>
         `;
 
@@ -111,11 +145,14 @@ form.addEventListener("submit", function(e) {
         return;
     }
 
+    // O tópico nasce com listas vazias de likes e deslikes
     const novoTopico = {
         id: Date.now(),
         titulo,
         conteudo,
-        data: new Date().toLocaleString("pt-BR")
+        data: new Date().toLocaleString("pt-BR"),
+        usuariosLike: [],
+        usuariosDeslike: []
     };
 
     let topicos = JSON.parse(localStorage.getItem(STORAGE_TOPICOS)) || [];
@@ -129,24 +166,73 @@ form.addEventListener("submit", function(e) {
 });
 
 listaTopicos.addEventListener("click", function(e) {
-    const botao = e.target.closest(".btn-excluir");
-    if (!botao) return;
+    const btnExcluir = e.target.closest(".btn-excluir");
+    const btnLike = e.target.closest(".btn-like");
+    const btnDeslike = e.target.closest(".btn-deslike");
 
-    const temCerteza = confirm("Tem certeza que deseja excluir este tópico? Esta ação não pode ser desfeita.");
-    
-    if (!temCerteza) {
-        return; 
-    }
-
-    const id = Number(botao.dataset.id);
     let topicos = JSON.parse(localStorage.getItem(STORAGE_TOPICOS)) || [];
 
-    topicos = topicos.filter(t => t.id !== id);
-    localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
+    // --- LÓGICA DE EXCLUIR ---
+    if (btnExcluir) {
+        const temCerteza = confirm("Tem certeza que deseja excluir este tópico? Esta ação não pode ser desfeita.");
+        if (!temCerteza) return;
 
-    carregarTopicos();
+        const id = Number(btnExcluir.dataset.id);
+        topicos = topicos.filter(t => t.id !== id);
+        localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
+        carregarTopicos();
+    }
+
+    // --- LÓGICA DE LIKE ---
+    if (btnLike) {
+        const id = Number(btnLike.dataset.id);
+        const index = topicos.findIndex(t => t.id === id);
+        
+        if (index !== -1) {
+            let topico = topicos[index];
+            topico.usuariosLike = topico.usuariosLike || [];
+            topico.usuariosDeslike = topico.usuariosDeslike || [];
+
+            if (topico.usuariosLike.includes(MEU_USUARIO)) {
+                // Se já tinha dado like, tira o like (remove da lista)
+                topico.usuariosLike = topico.usuariosLike.filter(user => user !== MEU_USUARIO);
+            } else {
+                // Se não tinha dado like, adiciona o like E tira o deslike (se houver)
+                topico.usuariosLike.push(MEU_USUARIO);
+                topico.usuariosDeslike = topico.usuariosDeslike.filter(user => user !== MEU_USUARIO);
+            }
+
+            localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
+            carregarTopicos();
+        }
+    }
+
+    // --- LÓGICA DE DESLIKE ---
+    if (btnDeslike) {
+        const id = Number(btnDeslike.dataset.id);
+        const index = topicos.findIndex(t => t.id === id);
+        
+        if (index !== -1) {
+            let topico = topicos[index];
+            topico.usuariosLike = topico.usuariosLike || [];
+            topico.usuariosDeslike = topico.usuariosDeslike || [];
+
+            if (topico.usuariosDeslike.includes(MEU_USUARIO)) {
+                // Se já tinha dado deslike, tira o deslike
+                topico.usuariosDeslike = topico.usuariosDeslike.filter(user => user !== MEU_USUARIO);
+            } else {
+                // Se não tinha dado deslike, adiciona o deslike E tira o like (se houver)
+                topico.usuariosDeslike.push(MEU_USUARIO);
+                topico.usuariosLike = topico.usuariosLike.filter(user => user !== MEU_USUARIO);
+            }
+
+            localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
+            carregarTopicos();
+        }
+    }
 });
 
+// Inicia a página
 document.addEventListener("DOMContentLoaded", carregarTopicos);
 </script>
 
