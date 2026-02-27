@@ -132,6 +132,12 @@ listaTopicos.addEventListener("click", function(e) {
     const botao = e.target.closest(".btn-excluir");
     if (!botao) return;
 
+    const temCerteza = confirm("Tem certeza que deseja excluir este tópico? Esta ação não pode ser desfeita.");
+    
+    if (!temCerteza) {
+        return; 
+    }
+
     const id = Number(botao.dataset.id);
     let topicos = JSON.parse(localStorage.getItem(STORAGE_TOPICOS)) || [];
 
