@@ -116,6 +116,12 @@ footer {
     margin-top: 20px;
 }
 
+/* Ajuste o valor '500px' para a altura que ficar melhor no seu layout */
+.carousel-inner img {
+    height: 400px; /* ou use 'vh' para altura relativa à tela, ex: 60vh */
+    object-fit: cover;
+}
+
 /* ----------------------------------------------------- */
 /* RESPONSIVIDADE */
 /* ----------------------------------------------------- */
