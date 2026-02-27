@@ -115,7 +115,7 @@ O projeto foi construído com forte foco na **Qualidade do Software** e **Docume
 
 ## 🧑‍💻 Autor(es)
 
-| Arthur Moreira | Matrícula (Opcional) | Contato (Opcional) |
+| Arthur Moreira | Matrícula (Opcional) | Contato (moreirasantosarthur06@gmail.com) |
 | :--- | :--- | :--- |
 | Douglas do Carmo| [Sua Matrícula] | [Seu Email / Link do LinkedIn] |
 | Gleyson Ferreira | [Matrícula do Colega 1] | [Email do Colega 1] |
