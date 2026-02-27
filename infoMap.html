@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interativo | Sustentabilidade Tapera</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: var(--dark-color);">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="img/Logo.png" alt="Logo Tapera ODS 6" class="navbar-logo"> 
+                Sustentabilidade Tapera
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="denuncia.html">Denúncia</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="infoMap.html">Mapa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="forum.html">Fórum</a></li>
+                    <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="secondary-page-content">
+        <div class="container py-5">
+            <h1 class="fw-bold mb-4 text-primary"><i class="bi bi-geo-alt-fill me-2"></i> Mapa Interativo de Ocorrências</h1>
+            <p class="lead">Visualize a rede de saneamento, estações de tratamento e os pontos de denúncia no bairro Tapera.</p>
+
+            <div id="mapid"></div>
+
+            <div class="mt-4 p-3 bg-light rounded shadow-sm">
+                <h5 class="fw-bold">Legenda</h5>
+                <p><i class="bi bi-pin-map-fill text-primary me-2"></i> Azul: Rede de Saneamento / ETE (Pontos de Infraestrutura)</p>
+                <p><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Vermelho: Denúncias Ativas</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 text-white" style="background-color: var(--dark-color);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h5 class="fw-bold"><img src="img/Logo.png" alt="Logo Tapera ODS 6" class="navbar-logo-footer"> Sustentabilidade Tapera</h5>
+                    <p class="text-white-50">Compromisso com o ODS 6 e a comunidade local.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5 class="fw-bold">Links Rápidos</h5>
+                    <a href="denuncia.html" class="text-white-50 me-3">Denunciar</a>
+                    <a href="infoMap.html" class="text-white-50 me-3">Mapa</a>
+                    <a href="forum.html" class="text-white-50">Fórum</a>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.25);">
+            <div class="text-center text-white-50">
+                <p class="mb-0">&copy; 2025 Sustentabilidade Tapera - ODS 6. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inicialização do Mapa Leaflet
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('mapid').setView([-27.67, -48.515], 13); // Coordenadas aproximadas da Tapera, Florianópolis
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Marcações simuladas (Exemplo da rede de esgoto e denúncias)
+            var marcacoes = [
+                { coordenadas: [-27.672, -48.515], titulo: "Estação de Tratamento (ETE)", descricao: "Local de tratamento do esgoto.", cor: 'blue' },
+                { coordenadas: [-27.671, -48.512], titulo: "Vazamento Grave", descricao: "Denúncia ativa de vazamento de esgoto.", cor: 'red' }
+            ];
+
+            marcacoes.forEach(function(marcacao) {
+                // Cria um ícone customizado se a cor for vermelha (denúncia)
+                let customIcon = marcacao.cor === 'red' ? 
+                    L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                    }) : null;
+                    
+                L.marker(marcacao.coordenadas, {icon: customIcon})
+                    .addTo(map)
+                    .bindPopup("<b>" + marcacao.titulo + "</b><br>" + marcacao.descricao);
+            });
+        });
+    </script>
+</body>
+</html>

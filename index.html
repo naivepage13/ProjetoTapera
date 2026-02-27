@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sustentabilidade Tapera - ODS 6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: var(--dark-color);">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">
+            <img src="img/Logo.png" alt="Logo Tapera" class="navbar-logo">
+            Sustentabilidade Tapera
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="denuncia.html">Denúncia</a></li>
+                <li class="nav-item"><a class="nav-link" href="infoMap.html">Mapa</a></li>
+                <li class="nav-item"><a class="nav-link" href="forum.html">Fórum</a></li>
+                <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- BANNER -->
+<header class="bg-secondary text-white text-center py-5 mt-5">
+    <div class="container">
+        <h1>Projeto Sustentabilidade Tapera</h1>
+        <p class="lead">Contribuindo para a melhoria do saneamento básico no bairro.</p>
+    </div>
+</header>
+
+    <!-- Container Inicial --> 
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" style="margin-top: 100px;">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+    
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="img/Tapera banner ajustado 02.png" class="d-block w-100" alt="Banner 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 class="fs-2 fw-bold">Transforme o Bairro Tapera</h5>
+                    <p class="fs-5">Identificou um problema na rede de esgoto? Faça sua parte.</p>
+                    <a href="denuncia.html" class="btn btn-primary btn-lg mt-3">Registrar Denúncia Agora</a>
+                </div>
+            </div>
+    
+            <div class="carousel-item">
+                <img src="img/Tapera banner ajustado 01.png" class="d-block w-100" alt="Banner 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 class="fs-2 fw-bold">Juntos pelo Saneamento</h5>
+                    <p class="fs-5">O desenvolvimento sustentável começa com a participação de todos.</p>
+                </div>
+            </div>
+    
+            <div class="carousel-item">
+                <img src="img/Tapera banner ajustado 03.png" class="d-block w-100" alt="Banner 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 class="fs-2 fw-bold">Conheça o Mapa</h5>
+                    <p class="fs-5">Veja os pontos de atenção e infraestrutura do nosso bairro.</p>
+                </div>
+            </div>
+        </div>
+    
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Próximo</span>
+        </button>
+    </div>
+<!-- SEÇÃO NOSSAS AÇÕES -->
+<section class="py-5" id="servicos">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Nossas Ações e Serviços</h2>
+
+        <div class="row g-4">
+
+            <!-- PERFIL -->
+            <div class="col-md-3">
+                <a href="perfil.html" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm service-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-circle display-4 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Perfil</h5>
+                            <p class="text-muted">
+                                Acesse e gerencie seus dados, denúncias e participação no fórum.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- CANAL DE DENÚNCIAS -->
+            <div class="col-md-3">
+                <a href="denuncia.html" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm service-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-exclamation-triangle-fill display-4 text-warning mb-3"></i>
+                            <h5 class="fw-bold">Canal de Denúncias</h5>
+                            <p class="text-muted">
+                                Visualize as denúncias e registre novos alertas sobre esgoto ou vazamentos.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- MAPA -->
+            <div class="col-md-3">
+                <a href="infoMap.html" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm service-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-geo-alt-fill display-4 text-info mb-3"></i>
+                            <h5 class="fw-bold">Mapa de Ocorrências</h5>
+                            <p class="text-muted">
+                                Veja no mapa as localizações de problemas e denúncias registradas.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- FÓRUM -->
+            <div class="col-md-3">
+                <a href="forum.html" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm service-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-people-fill display-4 text-success mb-3"></i>
+                            <h5 class="fw-bold">Fórum Comunitário</h5>
+                            <p class="text-muted">
+                                Participe das discussões e proponha soluções para a Tapera.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SEÇÃO O QUE É O ODS 6 -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-4">O que é o ODS 6?</h2>
+        <p>
+            O Objetivo de Desenvolvimento Sustentável 6 visa garantir a disponibilidade e a gestão 
+            sustentável da água e saneamento para todos.
+        </p>
+    </div>
+</section>
+
+<!-- RODAPÉ -->
+<footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
+    <div class="container">
+        <p class="mb-0">&copy; 2024 Sustentabilidade Tapera - Projeto ODS 6</p>
+        <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+/* Variáveis de Cores ODS 6 */
+:root {
+    --primary-color: #3498db; /* Azul primário - Água/Saneamento */
+    --secondary-color: #2ecc71; /* Verde - Sustentabilidade/Resolução */
+    --danger-color: #e74c3c; /* Vermelho - Denúncia/Alerta */
+    --dark-color: #2c3e50; /* Cor de texto escuro/Navbar/Footer */
+    --light-color: #ecf0f1; /* Cor de fundo claro */
+    --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 10px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Geneva, Verdana, sans-serif;
+    background: var(--light-color); 
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* ----------------------------------------------------- */
+/* ESTILIZAÇÃO DE IMAGENS E BOOTSTRAP */
+/* ----------------------------------------------------- */
+
+/* Logo na Navbar */
+.navbar-logo {
+    height: 40px; 
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Logo no Footer */
+.navbar-logo-footer {
+    height: 25px; 
+    margin-right: 5px;
+    vertical-align: text-top;
+}
+
+/* Ajuste de cores Bootstrap */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* Banner Principal com Imagem de Fundo */
+.hero-banner {
+    background-image: linear-gradient(rgba(44, 62, 80, 0.65), rgba(44, 62, 80, 0.65)), url('img/banner-ods6.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Efeito Parallax, opcional */
+    
+    padding: 100px 0;
+    padding-top: 170px; /* Offset para o Navbar fixo */
+    min-height: 50vh;
+}
+
+.hero-banner h1 {
+    font-size: 3.5rem;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Cards de Serviço (Ações) */
+.service-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.service-card .card-icon {
+    font-size: 3.5rem;
+    color: var(--primary-color); 
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+/* Accordion Customizado */
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+.accordion-item {
+    border-radius: var(--border-radius) !important;
+    margin-bottom: 10px;
+    box-shadow: var(--card-shadow);
+}
+
+/* Footer (Fundo escuro para contraste) */
+footer {
+    background-color: var(--dark-color) !important;
+}
+
+/* Estilo para as páginas secundárias (para reutilização) */
+.secondary-page-content {
+    padding-top: 100px; /* Espaçamento para Navbar fixa */
+    min-height: 80vh;
+}
+
+/* Mapa Leaflet - Necessário definir altura */
+#mapid {
+    height: 500px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+}
+
+/* ----------------------------------------------------- */
+/* RESPONSIVIDADE */
+/* ----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding: 80px 0;
+        padding-top: 150px; 
+    }
+    
+    .hero-banner h1 {
+        font-size: 2.5rem;
+    }
+    
+    /* Centraliza o texto no footer para mobile */
+    .col-md-6.text-md-end {
+        text-align: center !important;
+    }
+    
+    .col-md-6.mb-3.mb-md-0 {
+        text-align: center !important;
+        margin-bottom: 20px !important;
+    }
+}
