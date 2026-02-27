@@ -100,6 +100,15 @@
     </div>
 </footer>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+    <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body fw-bold" id="toastMensagem"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -204,7 +213,7 @@ formPerfil.addEventListener('submit', function(e) {
     const idExistente = inputId.value;
 
     if (!nome || !email) {
-        alert('Preencha pelo menos Nome e E-mail.');
+        mostrarToast('Preencha pelo menos Nome e E-mail.', "warning");
         return;
     }
 
@@ -218,7 +227,7 @@ formPerfil.addEventListener('submit', function(e) {
                 ? { ...p, nome, email, telefone, bairro }
                 : p
         );
-        alert('Perfil atualizado com sucesso!');
+        mostrarToast('Perfil atualizado com sucesso!', "success");
     } else {
         // novo cadastro
         const novoPerfil = {
@@ -229,7 +238,7 @@ formPerfil.addEventListener('submit', function(e) {
             bairro
         };
         perfis.push(novoPerfil);
-        alert('Perfil cadastrado com sucesso!');
+        mostrarToast('Perfil cadastrado com sucesso!', "success");
     }
 
     salvarPerfis(perfis);
@@ -259,13 +268,38 @@ listaPerfis.addEventListener('click', function(e) {
     }
 
     if (btnExcluir) {
+        const temCerteza = confirm("Tem certeza que deseja excluir este perfil? Esta ação não pode ser desfeita.");
+        
+        if (!temCerteza) return;
+
         const id = Number(btnExcluir.dataset.id);
         let perfis = obterPerfis();
         perfis = perfis.filter(p => p.id !== id);
         salvarPerfis(perfis);
         renderizarPerfis();
+
+        mostrarToast("Perfil excluído com sucesso!", "danger");
     }
 });
+
+// ----- FUNÇÃO PARA MOSTRAR O TOAST -----
+function mostrarToast(mensagem, tipo = 'success') {
+    const toastEl = document.getElementById('meuToast');
+    const toastMensagem = document.getElementById('toastMensagem');
+
+    toastEl.className = 'toast align-items-center border-0'; // Reseta as classes
+    toastEl.classList.add(`text-bg-${tipo}`);
+    
+    if(tipo !== 'warning' && tipo !== 'light') {
+        toastEl.classList.add('text-white');
+    }
+
+    toastMensagem.textContent = mensagem;
+        const toast = new bootstrap.Toast(toastEl, {
+        delay: 1700 
+    });
+    toast.show();
+}
 
 // Inicializa a lista ao abrir a página
 document.addEventListener('DOMContentLoaded', renderizarPerfis);

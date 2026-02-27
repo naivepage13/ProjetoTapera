@@ -64,6 +64,16 @@
 
 </main>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+    <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body fw-bold" id="toastMensagem">
+                </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -72,7 +82,6 @@ const form = document.getElementById("formTopico");
 const listaTopicos = document.getElementById("listaTopicos");
 
 // Simulação de quem está logado no momento
-// (No futuro, você pode puxar isso do localStorage do Perfil logado!)
 const MEU_USUARIO = "usuario_local_123"; 
 
 function carregarTopicos() {
@@ -85,7 +94,6 @@ function carregarTopicos() {
     }
 
     topicos.slice().reverse().forEach((topico) => {
-        // Garantir que as listas existam (para não quebrar tópicos antigos)
         const usuariosLike = topico.usuariosLike || [];
         const usuariosDeslike = topico.usuariosDeslike || [];
 
@@ -101,7 +109,7 @@ function carregarTopicos() {
         const iconeLike = euCurti ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up";
         const btnClassLike = euCurti ? "btn-success" : "btn-outline-success";
 
-        // Mesma lógica para o deslike (vermelho)
+        // Mesma lógica para o deslike
         const iconeDeslike = euDescurti ? "bi-hand-thumbs-down-fill" : "bi-hand-thumbs-down";
         const btnClassDeslike = euDescurti ? "btn-danger" : "btn-outline-danger";
 
@@ -159,7 +167,7 @@ form.addEventListener("submit", function(e) {
     topicos.push(novoTopico);
     localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
 
-    alert("Tópico publicado com sucesso!");
+    mostrarToast("Tópico publicado com sucesso!", "success");
 
     form.reset();
     carregarTopicos();
@@ -175,12 +183,16 @@ listaTopicos.addEventListener("click", function(e) {
     // --- LÓGICA DE EXCLUIR ---
     if (btnExcluir) {
         const temCerteza = confirm("Tem certeza que deseja excluir este tópico? Esta ação não pode ser desfeita.");
+        
         if (!temCerteza) return;
 
         const id = Number(btnExcluir.dataset.id);
+        let topicos = JSON.parse(localStorage.getItem(STORAGE_TOPICOS)) || [];
         topicos = topicos.filter(t => t.id !== id);
         localStorage.setItem(STORAGE_TOPICOS, JSON.stringify(topicos));
         carregarTopicos();
+
+        mostrarToast("Tópico excluído com sucesso!", "danger");
     }
 
     // --- LÓGICA DE LIKE ---
@@ -221,7 +233,7 @@ listaTopicos.addEventListener("click", function(e) {
                 // Se já tinha dado deslike, tira o deslike
                 topico.usuariosDeslike = topico.usuariosDeslike.filter(user => user !== MEU_USUARIO);
             } else {
-                // Se não tinha dado deslike, adiciona o deslike E tira o like (se houver)
+                // Se não tinha dado deslike, adiciona o deslike E tira o like
                 topico.usuariosDeslike.push(MEU_USUARIO);
                 topico.usuariosLike = topico.usuariosLike.filter(user => user !== MEU_USUARIO);
             }
@@ -232,9 +244,34 @@ listaTopicos.addEventListener("click", function(e) {
     }
 });
 
+// ----- FUNÇÃO PARA MOSTRAR O TOAST -----
+function mostrarToast(mensagem, tipo = 'success') {
+    const toastEl = document.getElementById('meuToast');
+    const toastMensagem = document.getElementById('toastMensagem');
+
+    // Remove cores antigas para não acumular
+    toastEl.classList.remove('text-bg-success', 'text-bg-warning', 'text-bg-danger', 'text-bg-info', 'text-white');
+    
+    // Adiciona a nova cor baseada no 'tipo' passado
+    toastEl.classList.add(`text-bg-${tipo}`);
+    
+    // Se for warning (amarelo), o texto fica escuro. Senão, fica branco.
+    if(tipo !== 'warning' && tipo !== 'light') {
+        toastEl.classList.add('text-white');
+    }
+
+    // Coloca a mensagem dentro do Toast
+    toastMensagem.textContent = mensagem;
+
+    // Dispara o Toast usando o Bootstrap
+    const toast = new bootstrap.Toast(toastEl, {
+        delay: 1700 
+    });
+    toast.show();
+}
+
 // Inicia a página
 document.addEventListener("DOMContentLoaded", carregarTopicos);
 </script>
-
 </body>
 </html>
