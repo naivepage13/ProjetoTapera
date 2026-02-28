@@ -73,32 +73,61 @@
     <script>
         // Inicialização do Mapa Leaflet
         document.addEventListener('DOMContentLoaded', function() {
-            var map = L.map('mapid').setView([-27.67, -48.515], 13); // Coordenadas aproximadas da Tapera, Florianópolis
+            // CORRIGIDO: Centraliza a câmera do mapa exatamente no bairro da Tapera
+            var map = L.map('mapid').setView([-27.6810, -48.5620], 14); 
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+            // Camada de Satélite Híbrido do Google (Imagens reais + Nomes das ruas)
+            L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                attribution: '© Google Satélite'
             }).addTo(map);
 
-            // Marcações simuladas (Exemplo da rede de esgoto e denúncias)
-            var marcacoes = [
-                { coordenadas: [-27.672, -48.515], titulo: "Estação de Tratamento (ETE)", descricao: "Local de tratamento do esgoto.", cor: 'blue' },
-                { coordenadas: [-27.671, -48.512], titulo: "Vazamento Grave", descricao: "Denúncia ativa de vazamento de esgoto.", cor: 'red' }
+            // 1. PINOS FIXOS DA INFRAESTRUTURA (Azul) - Atualizado para a Tapera
+            var infraestrutura = [
+                { coordenadas: [-27.6810, -48.5620], titulo: "Estação de Tratamento (ETE)", descricao: "Local central de tratamento da Tapera.", cor: 'blue' }
             ];
 
-            marcacoes.forEach(function(marcacao) {
-                // Cria um ícone customizado se a cor for vermelha (denúncia)
-                let customIcon = marcacao.cor === 'red' ? 
-                    L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-                    }) : null;
-                    
-                L.marker(marcacao.coordenadas, {icon: customIcon})
+            infraestrutura.forEach(function(ponto) {
+                L.marker(ponto.coordenadas)
                     .addTo(map)
-                    .bindPopup("<b>" + marcacao.titulo + "</b><br>" + marcacao.descricao);
+                    .bindPopup("<b>" + ponto.titulo + "</b><br>" + ponto.descricao);
             });
-        });
+
+            // 2. BUSCAR DENÚNCIAS REAIS DO LOCALSTORAGE (Pinos Vermelhos)
+            const STORAGE_KEY = 'denunciasTapera';
+            let denunciasSalvas = [];
+            try {
+                denunciasSalvas = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch {
+                denunciasSalvas = [];
+            }
+
+            // Configuração do pino vermelho
+            let iconeVermelho = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            });
+
+            // Criar um pino para cada denúncia cadastrada
+            denunciasSalvas.forEach(function(denuncia) {
+                
+                // Verifica se a denúncia tem as coordenadas reais salvas (para não quebrar com denúncias antigas)
+                if (denuncia.lat && denuncia.lng) {
+                    
+                    // Usa EXATAMENTE o local que o usuário clicou no minimapa!
+                    L.marker([denuncia.lat, denuncia.lng], {icon: iconeVermelho})
+                        .addTo(map)
+                        .bindPopup(`
+                            <span class="badge bg-danger mb-1">${denuncia.tipo}</span><br>
+                            <b>${denuncia.titulo}</b><br>
+                            <small class="text-muted"><i class="bi bi-geo-alt"></i> ${denuncia.localizacao}</small><br>
+                            <p class="mt-2 mb-0">${denuncia.descricao}</p>
+                            <small class="text-muted" style="font-size: 0.7em;">Registrado em: ${denuncia.data}</small>
+                        `);
+                }
+            }); // Fim do forEach
+        }); // Fim do evento DOMContentLoaded
     </script>
 </body>
 </html>
