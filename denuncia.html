@@ -131,6 +131,16 @@
         </div>
     </footer>
 
+    <!-- TOAST ALERT -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-bold" id="toastMensagem"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -139,6 +149,23 @@
         const formDenuncia = document.getElementById('denunciaForm');
         const listaDenuncias = document.getElementById('listaDenunciasRecentes');
         const STORAGE_KEY = 'denunciasTapera';
+
+        // --- FUNÇÃO PARA MOSTRAR O TOAST ---
+        function mostrarToast(mensagem, tipo = 'success') {
+            const toastEl = document.getElementById('meuToast');
+            const toastMensagem = document.getElementById('toastMensagem');
+
+            toastEl.className = 'toast align-items-center border-0'; 
+            toastEl.classList.add(`text-bg-${tipo}`);
+            
+            if(tipo !== 'warning' && tipo !== 'light') {
+                toastEl.classList.add('text-white');
+            }
+
+            toastMensagem.textContent = mensagem;
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); // Fica na tela por 3 segundos
+            toast.show();
+        }
 
         // --- LÓGICA DO MINIMAPA OCULTO ---
         const inputLocalizacao = document.getElementById('localizacaoDenuncia');
@@ -189,7 +216,7 @@
             const lng = document.getElementById('lngDenuncia').value;
 
             if (!lat || !lng) {
-                alert("Por favor, toque no mapa para marcar o local antes de confirmar.");
+                mostrarToast("Por favor, toque no mapa para marcar o local antes de confirmar.", "warning");
                 return;
             }
 
@@ -198,7 +225,7 @@
             containerMinimapa.classList.add('d-none'); // Esconde o mapa
 
             try {
-                // Chama a API gratuita para converter GPS em Endereço
+                // Chama a API para converter GPS em Endereço
                 const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
                 const dados = await resposta.json();
 
@@ -276,7 +303,7 @@
                 return;
             }
             if (!lat || !lng) {
-                alert("Por favor, clique no campo de localização e marque no mapa!");
+                mostrarToast("Clique no campo de localização e marque no mapa!", "warning");
                 return;
             }
 
@@ -298,7 +325,7 @@
             denuncias.push(novaDenuncia);
             salvarDenuncias(denuncias);
 
-            alert("Denúncia enviada com sucesso!");
+            mostrarToast("Denúncia enviada com sucesso!", "success");
 
             formDenuncia.reset();
             inputLocalizacao.value = ""; 
