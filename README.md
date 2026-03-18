@@ -1,6 +1,6 @@
 Com base no código da solução (HTML, CSS e JavaScript para as páginas `index.html`, `denuncia.html`, `forum.html`, `infoMap.html`, `perfil.html`) e nos requisitos de entrega, segue uma proposta de estrutura e conteúdo para o arquivo **`README.md`** do seu repositório GitHub, respeitando todos os critérios de avaliação:
 
------
+----- -
 
 # 🌐 Sustentabilidade Tapera: Monitoramento ODS 6
 
