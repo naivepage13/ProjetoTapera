@@ -30,6 +30,8 @@
                     <li class="nav-item"><a class="nav-link" href="infoMap.html">Mapa</a></li>
                     <li class="nav-item"><a class="nav-link" href="forum.html">Fórum</a></li>
                     <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ambiental.html">Ambiental</a></li>
+                    
                 </ul>
             </div>
         </div>
@@ -141,17 +143,7 @@
         </div>
     </main>
 
-    <!-- RODAPÉ -->
-    <footer class="py-4 text-white" style="background-color: var(--dark-color);">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 Projeto Sustentabilidade Tapera - ODS 6</p>
-                    <p class="mb-0 small">Desenvolvido pelos alunos de ADS - UniSENAI.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+   
 
     <!-- TOAST ALERT -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
@@ -167,220 +159,229 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        const formDenuncia = document.getElementById('denunciaForm');
-        const listaDenuncias = document.getElementById('listaDenunciasRecentes');
-        const STORAGE_KEY = 'denunciasTapera';
+        <script>
+            const formDenuncia = document.getElementById('denunciaForm');
+            const listaDenuncias = document.getElementById('listaDenunciasRecentes');
+            const STORAGE_KEY = 'denunciasTapera';
 
-        // --- FUNÇÃO PARA MOSTRAR O TOAST ---
-        function mostrarToast(mensagem, tipo = 'success') {
-            const toastEl = document.getElementById('meuToast');
-            const toastMensagem = document.getElementById('toastMensagem');
+            // --- FUNÇÃO PARA MOSTRAR O TOAST ---
+            function mostrarToast(mensagem, tipo = 'success') {
+                const toastEl = document.getElementById('meuToast');
+                const toastMensagem = document.getElementById('toastMensagem');
 
-            toastEl.className = 'toast align-items-center border-0'; 
-            toastEl.classList.add(`text-bg-${tipo}`);
-            
-            if(tipo !== 'warning' && tipo !== 'light') {
-                toastEl.classList.add('text-white');
+                toastEl.className = 'toast align-items-center border-0'; 
+                toastEl.classList.add(`text-bg-${tipo}`);
+                
+                if(tipo !== 'warning' && tipo !== 'light') {
+                    toastEl.classList.add('text-white');
+                }
+
+                toastMensagem.textContent = mensagem;
+                const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); // Fica na tela por 3 segundos
+                toast.show();
             }
 
-            toastMensagem.textContent = mensagem;
-            const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); // Fica na tela por 3 segundos
-            toast.show();
-        }
+            // --- LÓGICA DO MINIMAPA OCULTO ---
+            const inputLocalizacao = document.getElementById('localizacaoDenuncia');
+            const containerMinimapa = document.getElementById('containerMinimapa');
+            const btnConfirmar = document.getElementById('btnConfirmarLocal');
+            let minimap;
+            let marcadorAtual;
 
-        // --- LÓGICA DO MINIMAPA OCULTO ---
-        const inputLocalizacao = document.getElementById('localizacaoDenuncia');
-        const containerMinimapa = document.getElementById('containerMinimapa');
-        const btnConfirmar = document.getElementById('btnConfirmarLocal');
-        let minimap;
-        let marcadorAtual;
+            // 1. Quando clica no campo de texto, o mapa aparece
+            inputLocalizacao.addEventListener('click', function() {
+                containerMinimapa.classList.remove('d-none'); // Tira a classe que esconde o mapa
 
-        // 1. Quando clica no campo de texto, o mapa aparece
-        inputLocalizacao.addEventListener('click', function() {
-            containerMinimapa.classList.remove('d-none'); // Tira a classe que esconde o mapa
+                // Só cria o mapa na primeira vez que clicar
+                if (!minimap) {
+                    minimap = L.map('minimap').setView([-27.6875, -48.5600], 15); // Centro da Tapera
 
-            // Só cria o mapa na primeira vez que clicar
-            if (!minimap) {
-                minimap = L.map('minimap').setView([-27.6875, -48.5600], 15); // Centro da Tapera
+                    // Camada de Satélite Híbrido do Google (Imagens reais + Nomes das ruas)
+                    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        attribution: '© Google Satélite'
+                    }).addTo(minimap);
 
-                 // Camada de Satélite Híbrido do Google (Imagens reais + Nomes das ruas)
-                L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    attribution: '© Google Satélite'
-                }).addTo(minimap);
+                    // Ícone vermelho para a denúncia
+                    let iconeVermelho = L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41], iconAnchor: [12, 41]
+                    });
 
-                // Ícone vermelho para a denúncia
-                let iconeVermelho = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41], iconAnchor: [12, 41]
-                });
-
-                // Evento de clique no mapa
-                minimap.on('click', function(e) {
-                    if (marcadorAtual) minimap.removeLayer(marcadorAtual); // Remove o pino anterior
-                    marcadorAtual = L.marker(e.latlng, {icon: iconeVermelho}).addTo(minimap); // Cria novo pino
-                    
-                    // Salva as coordenadas escondidas
-                    document.getElementById('latDenuncia').value = e.latlng.lat;
-                    document.getElementById('lngDenuncia').value = e.latlng.lng;
-                });
-            }
-
-            // Corrige um bug visual do Leaflet quando o mapa começa escondido
-            setTimeout(() => { minimap.invalidateSize(); }, 200);
-        });
-
-        // 2. Quando clica em Confirmar, busca o endereço real na API (Geocodificação Reversa)
-        btnConfirmar.addEventListener('click', async function() {
-            const lat = document.getElementById('latDenuncia').value;
-            const lng = document.getElementById('lngDenuncia').value;
-
-            if (!lat || !lng) {
-                mostrarToast("Por favor, toque no mapa para marcar o local antes de confirmar.", "warning");
-                return;
-            }
-
-            // Dá um feedback visual enquanto o sistema pensa
-            inputLocalizacao.value = "📍 Buscando endereço..."; 
-            containerMinimapa.classList.add('d-none'); // Esconde o mapa
-
-            try {
-                // Chama a API para converter GPS em Endereço
-                const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
-                const dados = await resposta.json();
-
-                // Pega o nome da rua ou um fallback caso seja uma área sem rua mapeada
-                const rua = dados.address.road || "Rua não identificada";
-                const bairro = dados.address.suburb || dados.address.city_district || "Tapera";
-                const enderecoReal = `${rua}, ${bairro}`;
-
-                // Salva no campo oculto e mostra no input para o usuário
-                document.getElementById('enderecoConvertido').value = enderecoReal;
-                inputLocalizacao.value = `📍 ${enderecoReal}`;
-            } catch (erro) {
-                console.error("Erro na busca de endereço:", erro);
-                inputLocalizacao.value = "📍 Local marcado (Endereço offline)";
-                document.getElementById('enderecoConvertido').value = "Coordenadas salvas no mapa";
-            }
-        });
-
-        // --- FUNÇÕES GERAIS DE DADOS ---
-        function obterDenunciasSalvas() {
-            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } 
-            catch { return []; }
-        }
-
-        function salvarDenuncias(lista) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-        }
-
-        function renderizarDenuncias() {
-            const denuncias = obterDenunciasSalvas();
-            listaDenuncias.innerHTML = '';
-
-            if (!denuncias.length) {
-                listaDenuncias.innerHTML = `<li class="list-group-item text-muted">Nenhuma denúncia registrada ainda.</li>`;
-                return;
-            }
-
-            denuncias.slice().reverse().forEach(denuncia => {
-                const li = document.createElement('li');
-                // Adicionamos 'py-3' para dar um respiro maior entre os itens na tela do celular
-                li.className = 'list-group-item d-flex justify-content-between align-items-center py-3';
-
-                li.innerHTML = `
-                    <div class="pe-3">
-                        <strong class="fs-5 text-dark">${denuncia.titulo}</strong><br>
+                    // Evento de clique no mapa
+                    minimap.on('click', function(e) {
+                        if (marcadorAtual) minimap.removeLayer(marcadorAtual); // Remove o pino anterior
+                        marcadorAtual = L.marker(e.latlng, {icon: iconeVermelho}).addTo(minimap); // Cria novo pino
                         
-                        <span style="color: #333; font-size: 1rem;">
-                            ${denuncia.localizacao}
-                        </span>
-                    </div>
-                    
-                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                        <span class="badge bg-danger">Nova</span>
-                        <button class="btn btn-danger btn-excluir" data-id="${denuncia.id}" aria-label="Excluir">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                `;
+                        // Salva as coordenadas escondidas
+                        document.getElementById('latDenuncia').value = e.latlng.lat;
+                        document.getElementById('lngDenuncia').value = e.latlng.lng;
+                    });
+                }
 
-                listaDenuncias.appendChild(li);
+                // Corrige um bug visual do Leaflet quando o mapa começa escondido
+                setTimeout(() => { minimap.invalidateSize(); }, 200);
             });
-        }
 
-        // --- SALVAR A DENÚNCIA ---
-        formDenuncia.addEventListener('submit', function(e) {
-            e.preventDefault();
+            // 2. Quando clica em Confirmar, busca o endereço real na API (Geocodificação Reversa)
+            btnConfirmar.addEventListener('click', async function() {
+                const lat = document.getElementById('latDenuncia').value;
+                const lng = document.getElementById('lngDenuncia').value;
 
-            const titulo = document.getElementById('tituloDenuncia').value.trim();
-            const tipo = document.getElementById('tipoDenuncia').value;
-            const referencia = document.getElementById('referenciaDenuncia').value.trim();
-            const descricao = document.getElementById('descricaoDenuncia').value.trim();
-            
-            const lat = document.getElementById('latDenuncia').value;
-            const lng = document.getElementById('lngDenuncia').value;
-            // Pega o endereço que a API retornou
-            const enderecoTexto = document.getElementById('enderecoConvertido').value;
+                if (!lat || !lng) {
+                    mostrarToast("Por favor, toque no mapa para marcar o local antes de confirmar.", "warning");
+                    return;
+                }
 
-            // Validação
-            if (!titulo || !tipo || !descricao) {
-                alert("Preencha todos os campos obrigatórios!"); 
-                return;
+                // Dá um feedback visual enquanto o sistema pensa
+                inputLocalizacao.value = "📍 Buscando endereço..."; 
+                containerMinimapa.classList.add('d-none'); // Esconde o mapa
+
+                try {
+                    // Chama a API para converter GPS em Endereço
+                    const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+                    const dados = await resposta.json();
+
+                    // Pega o nome da rua ou um fallback caso seja uma área sem rua mapeada
+                    const rua = dados.address.road || "Rua não identificada";
+                    const bairro = dados.address.suburb || dados.address.city_district || "Tapera";
+                    const enderecoReal = `${rua}, ${bairro}`;
+
+                    // Salva no campo oculto e mostra no input para o usuário
+                    document.getElementById('enderecoConvertido').value = enderecoReal;
+                    inputLocalizacao.value = `📍 ${enderecoReal}`;
+                } catch (erro) {
+                    console.error("Erro na busca de endereço:", erro);
+                    inputLocalizacao.value = "📍 Local marcado (Endereço offline)";
+                    document.getElementById('enderecoConvertido').value = "Coordenadas salvas no mapa";
+                }
+            });
+
+            // --- FUNÇÕES GERAIS DE DADOS ---
+            function obterDenunciasSalvas() {
+                try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } 
+                catch { return []; }
             }
-            if (!lat || !lng) {
-                mostrarToast("Clique no campo de localização e marque no mapa!", "warning");
-                return;
+
+            function salvarDenuncias(lista) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
             }
 
-            // Junta o endereço da API com a referência que o usuário digitou
-            const localizacaoFinal = referencia ? `${enderecoTexto} (${referencia})` : enderecoTexto;
+            function renderizarDenuncias() {
+                const denuncias = obterDenunciasSalvas();
+                listaDenuncias.innerHTML = '';
 
-            const novaDenuncia = {
-                id: Date.now(),
-                titulo,
-                tipo,
-                localizacao: localizacaoFinal,
-                descricao,
-                lat: parseFloat(lat), 
-                lng: parseFloat(lng), 
-                data: new Date().toLocaleString('pt-BR')
-            };
+                if (!denuncias.length) {
+                    listaDenuncias.innerHTML = `<li class="list-group-item text-muted">Nenhuma denúncia registrada ainda.</li>`;
+                    return;
+                }
 
-            const denuncias = obterDenunciasSalvas();
-            denuncias.push(novaDenuncia);
-            salvarDenuncias(denuncias);
+                denuncias.slice().reverse().forEach(denuncia => {
+                    const li = document.createElement('li');
+                    // Adicionamos 'py-3' para dar um respiro maior entre os itens na tela do celular
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center py-3';
 
-            mostrarToast("Denúncia enviada com sucesso!", "success");
+                    li.innerHTML = `
+                        <div class="pe-3">
+                            <strong class="fs-5 text-dark">${denuncia.titulo}</strong><br>
+                            
+                            <span style="color: #333; font-size: 1rem;">
+                                ${denuncia.localizacao}
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                            <span class="badge bg-danger">Nova</span>
+                            <button class="btn btn-danger btn-excluir" data-id="${denuncia.id}" aria-label="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
 
-            formDenuncia.reset();
-            inputLocalizacao.value = ""; 
-            document.getElementById('enderecoConvertido').value = ""; // Limpa também o oculto
-            if (marcadorAtual) minimap.removeLayer(marcadorAtual); 
-            renderizarDenuncias();
-        });
+                    listaDenuncias.appendChild(li);
+                });
+            }
 
-        // --- EXCLUIR A DENÚNCIA ---
-        listaDenuncias.addEventListener('click', function(e) {
-            const botao = e.target.closest('.btn-excluir');
-            if (!botao) return;
+            // --- SALVAR A DENÚNCIA ---
+            formDenuncia.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            const temCerteza = confirm("Tem certeza que deseja excluir esta denúncia?");
-            if (!temCerteza) return;
+                const titulo = document.getElementById('tituloDenuncia').value.trim();
+                const tipo = document.getElementById('tipoDenuncia').value;
+                const referencia = document.getElementById('referenciaDenuncia').value.trim();
+                const descricao = document.getElementById('descricaoDenuncia').value.trim();
+                
+                const lat = document.getElementById('latDenuncia').value;
+                const lng = document.getElementById('lngDenuncia').value;
+                // Pega o endereço que a API retornou
+                const enderecoTexto = document.getElementById('enderecoConvertido').value;
 
-            const id = Number(botao.dataset.id);
-            let denuncias = obterDenunciasSalvas();
+                // Validação
+                if (!titulo || !tipo || !descricao) {
+                    alert("Preencha todos os campos obrigatórios!"); 
+                    return;
+                }
+                if (!lat || !lng) {
+                    mostrarToast("Clique no campo de localização e marque no mapa!", "warning");
+                    return;
+                }
 
-            denuncias = denuncias.filter(d => d.id !== id);
-            salvarDenuncias(denuncias);
+                // Junta o endereço da API com a referência que o usuário digitou
+                const localizacaoFinal = referencia ? `${enderecoTexto} (${referencia})` : enderecoTexto;
 
-            renderizarDenuncias();
-        });
+                const novaDenuncia = {
+                    id: Date.now(),
+                    titulo,
+                    tipo,
+                    localizacao: localizacaoFinal,
+                    descricao,
+                    lat: parseFloat(lat), 
+                    lng: parseFloat(lng), 
+                    data: new Date().toLocaleString('pt-BR')
+                };
 
-        document.addEventListener('DOMContentLoaded', renderizarDenuncias);
-</script>
+                const denuncias = obterDenunciasSalvas();
+                denuncias.push(novaDenuncia);
+                salvarDenuncias(denuncias);
 
-</body>
+                mostrarToast("Denúncia enviada com sucesso!", "success");
+
+                formDenuncia.reset();
+                inputLocalizacao.value = ""; 
+                document.getElementById('enderecoConvertido').value = ""; // Limpa também o oculto
+                if (marcadorAtual) minimap.removeLayer(marcadorAtual); 
+                renderizarDenuncias();
+            });
+
+            // --- EXCLUIR A DENÚNCIA ---
+            listaDenuncias.addEventListener('click', function(e) {
+                const botao = e.target.closest('.btn-excluir');
+                if (!botao) return;
+
+                const temCerteza = confirm("Tem certeza que deseja excluir esta denúncia?");
+                if (!temCerteza) return;
+
+                const id = Number(botao.dataset.id);
+                let denuncias = obterDenunciasSalvas();
+
+                denuncias = denuncias.filter(d => d.id !== id);
+                salvarDenuncias(denuncias);
+
+                renderizarDenuncias();
+            });
+
+            document.addEventListener('DOMContentLoaded', renderizarDenuncias);
+        </script>
+
+        <!-- RODAPÉ -->
+        <footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
+            <div class="container">
+                <p class="mb-0">&copy; 2026 Sustentabilidade Tapera - Projeto ODS 6</p>
+                <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>
