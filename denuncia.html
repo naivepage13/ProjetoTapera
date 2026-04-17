@@ -18,11 +18,9 @@
             <img src="img/Logo_cor_branca.png" alt="Logo Tapera" class="navbar-logo">
             Sustentabilidade Tapera
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
@@ -40,351 +38,322 @@
     </div>
 </nav>
 
-    <!-- CONTEÚDO -->
-    <main class="secondary-page-content">
-        <div class="container py-5">
-            <h1 class="fw-bold mb-4 text-primary">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> Canal de Denúncias
-            </h1>
-            <p class="lead">Registre um problema relacionado à água, esgoto ou saneamento no bairro Tapera.</p>
+<!-- CONTEÚDO -->
+<main class="secondary-page-content">
+    <div class="container py-5">
+        <h1 class="fw-bold mb-4 text-primary">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Canal de Denúncias
+        </h1>
+        <p class="lead">Registre um problema relacionado à água, esgoto ou saneamento no bairro Tapera.</p>
 
-            <div class="row">
-                <!-- FORMULÁRIO -->
-                <div class="col-lg-8">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="card-title mb-3">Preencha os dados da ocorrência</h4>
-                        <form id="denunciaForm">
+        <div class="row">
+            <!-- FORMULÁRIO -->
+            <div class="col-lg-8">
+                <div class="card p-4 shadow-sm">
+                    <h4 class="card-title mb-3">Preencha os dados da ocorrência</h4>
+                    <form id="denunciaForm">
 
-                            <div class="mb-3">
-                                <label for="tituloDenuncia" class="form-label">Título do Problema</label>
-                                <input type="text" class="form-control" id="tituloDenuncia" required>
+                        <div class="mb-3">
+                            <label for="tituloDenuncia" class="form-label">Título do Problema *</label>
+                            <input type="text" class="form-control" id="tituloDenuncia" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipoDenuncia" class="form-label">Tipo de Ocorrência *</label>
+                            <select class="form-select" id="tipoDenuncia" required>
+                                <option value="" selected disabled>Selecione a categoria do problema...</option>
+                                <optgroup label="💧 Abastecimento de Água">
+                                    <option value="Falta de Água">Falta de Água</option>
+                                    <option value="Vazamento de Água (Rede Pública)">Vazamento de Água (Rua/Calçada)</option>
+                                    <option value="Qualidade da Água">Água com cor, odor ou gosto alterado</option>
+                                    <option value="Baixa Pressão">Pressão da água muito baixa</option>
+                                </optgroup>
+                                <optgroup label="🚽 Esgotamento Sanitário">
+                                    <option value="Esgoto a Céu Aberto">Esgoto a Céu Aberto</option>
+                                    <option value="Vazamento de Esgoto">Vazamento de Esgoto (Rua/Calçada)</option>
+                                    <option value="Boca de Lobo Entupida">Boca de Lobo Entupida / Retornando</option>
+                                    <option value="Ligação Clandestina">Ligação clandestina (Esgoto na rede pluvial)</option>
+                                    <option value="Forte Odor">Forte odor de esgoto na região</option>
+                                </optgroup>
+                                <optgroup label="🌱 Drenagem e Meio Ambiente (Tapera)">
+                                    <option value="Alagamento">Alagamento / Inundação de Via</option>
+                                    <option value="Lixo no Manguezal/Praia">Descarte irregular de lixo (Manguezal/Praia)</option>
+                                    <option value="Poluição da Água">Poluição visível no mar ou curso d'água</option>
+                                </optgroup>
+                                <optgroup label="Outros">
+                                    <option value="Outro Problema">Outro (Especificar na descrição)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="localizacaoDenuncia" class="form-label">Localização da Ocorrência *</label>
+                            <input type="text" class="form-control" id="localizacaoDenuncia"
+                                placeholder="Clique aqui para abrir o mapa e marcar o local"
+                                readonly style="cursor: pointer; background-color: #fff;" required>
+
+                            <div id="containerMinimapa" class="d-none mt-2 p-2 border rounded shadow-sm" style="background-color: var(--light-color);">
+                                <p class="small text-primary fw-bold mb-2">
+                                    <i class="bi bi-hand-index-thumb"></i> Toque no mapa para cravar o pino vermelho no local do problema.
+                                </p>
+                                <div id="minimap" style="height: 250px; width: 100%; border-radius: 8px; z-index: 1;"></div>
+                                <button type="button" id="btnConfirmarLocal" class="btn btn-sm btn-success w-100 mt-2">
+                                    <i class="bi bi-check-circle"></i> Confirmar Localização
+                                </button>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="tipoDenuncia" class="form-label">Tipo de Ocorrência *</label>
-                                <select class="form-select" id="tipoDenuncia" required>
-                                    <option value="" selected disabled>Selecione a categoria do problema...</option>
-                                    
-                                    <optgroup label="💧 Abastecimento de Água">
-                                        <option value="Falta de Água">Falta de Água</option>
-                                        <option value="Vazamento de Água (Rede Pública)">Vazamento de Água (Rua/Calçada)</option>
-                                        <option value="Qualidade da Água">Água com cor, odor ou gosto alterado</option>
-                                        <option value="Baixa Pressão">Pressão da água muito baixa</option>
-                                    </optgroup>
+                            <input type="hidden" id="latDenuncia">
+                            <input type="hidden" id="lngDenuncia">
+                            <input type="hidden" id="enderecoConvertido">
+                        </div>
 
-                                    <optgroup label="🚽 Esgotamento Sanitário">
-                                        <option value="Esgoto a Céu Aberto">Esgoto a Céu Aberto</option>
-                                        <option value="Vazamento de Esgoto">Vazamento de Esgoto (Rua/Calçada)</option>
-                                        <option value="Boca de Lobo Entupida">Boca de Lobo Entupida / Retornando</option>
-                                        <option value="Ligação Clandestina">Ligação clandestina (Esgoto na rede pluvial)</option>
-                                        <option value="Forte Odor">Forte odor de esgoto na região</option>
-                                    </optgroup>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="referenciaDenuncia"
+                                placeholder="Ponto de referência (Ex: Em frente à padaria) - Opcional">
+                        </div>
 
-                                    <optgroup label="🌱 Drenagem e Meio Ambiente (Tapera)">
-                                        <option value="Alagamento">Alagamento / Inundação de Via</option>
-                                        <option value="Lixo no Manguezal/Praia">Descarte irregular de lixo (Manguezal/Praia)</option>
-                                        <option value="Poluição da Água">Poluição visível no mar ou curso d'água</option>
-                                    </optgroup>
+                        <div class="mb-3">
+                            <label for="descricaoDenuncia" class="form-label">Descrição Detalhada *</label>
+                            <textarea class="form-control" id="descricaoDenuncia" rows="3" required></textarea>
+                        </div>
 
-                                    <optgroup label="Outros">
-                                        <option value="Outro Problema">Outro (Especificar na descrição)</option>
-                                    </optgroup>
-                                </select>
-                            </div>
+                        <div class="mb-4">
+                            <label for="fotoAnexo" class="form-label">Anexar Foto (opcional)</label>
+                            <input class="form-control" type="file" id="fotoAnexo" accept="image/*">
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="localizacaoDenuncia" class="form-label">Localização da Ocorrência *</label>
-                                <input type="text" class="form-control" id="localizacaoDenuncia" placeholder="Clique aqui para abrir o mapa e marcar o local" readonly style="cursor: pointer; background-color: #fff;" required>
-
-                                <div id="containerMinimapa" class="d-none mt-2 p-2 border rounded shadow-sm" style="background-color: var(--light-color);">
-                                    <p class="small text-primary fw-bold mb-2"><i class="bi bi-hand-index-thumb"></i> Toque no mapa para cravar o pino vermelho no local do problema.</p>
-                                    
-                                    <div id="minimap" style="height: 250px; width: 100%; border-radius: 8px; z-index: 1;"></div>
-                                    
-                                    <button type="button" id="btnConfirmarLocal" class="btn btn-sm btn-success w-100 mt-2">
-                                        <i class="bi bi-check-circle"></i> Confirmar Localização
-                                    </button>
-                                </div>
-
-                                <input type="hidden" id="latDenuncia">
-                                <input type="hidden" id="lngDenuncia">
-                                <input type="hidden" id="enderecoConvertido"> 
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="referenciaDenuncia" placeholder="Ponto de referência (Ex: Em frente à padaria) - Opcional">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="descricaoDenuncia" class="form-label">Descrição Detalhada</label>
-                                <textarea class="form-control" id="descricaoDenuncia" rows="3" required></textarea>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="fotoAnexo" class="form-label">Anexar Foto (opcional)</label>
-                                <input class="form-control" type="file" id="fotoAnexo">
-                            </div>
-
-                            <button type="submit" class="btn btn-danger btn-lg w-100">
-                                <i class="bi bi-send-fill me-2"></i> Enviar Denúncia
-                            </button>
-
-                        </form>
-                    </div>
-                </div>
-
-                <!-- LISTA À DIREITA -->
-                <div class="col-lg-4 mt-4 mt-lg-0">
-                    <div class="card p-3 shadow-sm" style="background-color: var(--light-color);">
-                        <h5 class="card-title text-dark fw-bold mb-3">Denúncias Recentes</h5>
-                        <ul id="listaDenunciasRecentes" class="list-group list-group-flush">
-                            <!-- Preenchido dinamicamente -->
-                        </ul>
-                    </div>
+                        <button type="submit" id="btnEnviar" class="btn btn-danger btn-lg w-100">
+                            <i class="bi bi-send-fill me-2"></i> Enviar Denúncia
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </main>
 
-   
-
-    <!-- TOAST ALERT -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
-        <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body fw-bold" id="toastMensagem"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            <!-- LISTA À DIREITA -->
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card p-3 shadow-sm" style="background-color: var(--light-color);">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title text-dark fw-bold mb-0">Denúncias Recentes</h5>
+                        <span id="badge-total" class="badge bg-danger">0</span>
+                    </div>
+                    <div id="loadingLista" class="text-center py-3 text-muted small">
+                        <div class="spinner-border spinner-border-sm me-1"></div> Carregando...
+                    </div>
+                    <ul id="listaDenunciasRecentes" class="list-group list-group-flush"></ul>
+                </div>
             </div>
         </div>
     </div>
+</main>
 
-    <!-- SCRIPT -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- TOAST ALERT -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+    <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body fw-bold" id="toastMensagem"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    </div>
+</div>
 
-        <script>
-            const formDenuncia = document.getElementById('denunciaForm');
-            const listaDenuncias = document.getElementById('listaDenunciasRecentes');
-            const STORAGE_KEY = 'denunciasTapera';
+<!-- RODAPÉ -->
+<footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
+    <div class="container">
+        <p class="mb-0">&copy; 2026 Sustentabilidade Tapera - Projeto ODS 6</p>
+        <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
+    </div>
+</footer>
 
-            // --- FUNÇÃO PARA MOSTRAR O TOAST ---
-            function mostrarToast(mensagem, tipo = 'success') {
-                const toastEl = document.getElementById('meuToast');
-                const toastMensagem = document.getElementById('toastMensagem');
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // ── Configuração da API ──────────────────────────────────
+    const API_BASE = 'http://localhost:3000/api';
 
-                toastEl.className = 'toast align-items-center border-0'; 
-                toastEl.classList.add(`text-bg-${tipo}`);
-                
-                if(tipo !== 'warning' && tipo !== 'light') {
-                    toastEl.classList.add('text-white');
-                }
+    // ── Elementos do DOM ─────────────────────────────────────
+    const formDenuncia       = document.getElementById('denunciaForm');
+    const listaDenuncias     = document.getElementById('listaDenunciasRecentes');
+    const inputLocalizacao   = document.getElementById('localizacaoDenuncia');
+    const containerMinimapa  = document.getElementById('containerMinimapa');
+    const btnConfirmar       = document.getElementById('btnConfirmarLocal');
+    const btnEnviar          = document.getElementById('btnEnviar');
+    const badgeTotal         = document.getElementById('badge-total');
+    const loadingLista       = document.getElementById('loadingLista');
 
-                toastMensagem.textContent = mensagem;
-                const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); // Fica na tela por 3 segundos
-                toast.show();
-            }
+    let minimap, marcadorAtual;
 
-            // --- LÓGICA DO MINIMAPA OCULTO ---
-            const inputLocalizacao = document.getElementById('localizacaoDenuncia');
-            const containerMinimapa = document.getElementById('containerMinimapa');
-            const btnConfirmar = document.getElementById('btnConfirmarLocal');
-            let minimap;
-            let marcadorAtual;
+    // ── Toast ────────────────────────────────────────────────
+    function mostrarToast(mensagem, tipo = 'success') {
+        const toastEl  = document.getElementById('meuToast');
+        const toastMsg = document.getElementById('toastMensagem');
+        toastEl.className = `toast align-items-center border-0 text-bg-${tipo}`;
+        if (!['warning', 'light'].includes(tipo)) toastEl.classList.add('text-white');
+        toastMsg.textContent = mensagem;
+        new bootstrap.Toast(toastEl, { delay: 3500 }).show();
+    }
 
-            // 1. Quando clica no campo de texto, o mapa aparece
-            inputLocalizacao.addEventListener('click', function() {
-                containerMinimapa.classList.remove('d-none'); // Tira a classe que esconde o mapa
+    // ── Minimapa ─────────────────────────────────────────────
+    inputLocalizacao.addEventListener('click', () => {
+        containerMinimapa.classList.remove('d-none');
+        if (!minimap) {
+            minimap = L.map('minimap').setView([-27.6875, -48.5600], 15);
+            L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                maxZoom: 20, attribution: '© Google Satélite'
+            }).addTo(minimap);
 
-                // Só cria o mapa na primeira vez que clicar
-                if (!minimap) {
-                    minimap = L.map('minimap').setView([-27.6875, -48.5600], 15); // Centro da Tapera
-
-                    // Camada de Satélite Híbrido do Google (Imagens reais + Nomes das ruas)
-                    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                        maxZoom: 20,
-                        attribution: '© Google Satélite'
-                    }).addTo(minimap);
-
-                    // Ícone vermelho para a denúncia
-                    let iconeVermelho = L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41], iconAnchor: [12, 41]
-                    });
-
-                    // Evento de clique no mapa
-                    minimap.on('click', function(e) {
-                        if (marcadorAtual) minimap.removeLayer(marcadorAtual); // Remove o pino anterior
-                        marcadorAtual = L.marker(e.latlng, {icon: iconeVermelho}).addTo(minimap); // Cria novo pino
-                        
-                        // Salva as coordenadas escondidas
-                        document.getElementById('latDenuncia').value = e.latlng.lat;
-                        document.getElementById('lngDenuncia').value = e.latlng.lng;
-                    });
-                }
-
-                // Corrige um bug visual do Leaflet quando o mapa começa escondido
-                setTimeout(() => { minimap.invalidateSize(); }, 200);
+            const iconeVermelho = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41]
             });
 
-            // 2. Quando clica em Confirmar, busca o endereço real na API (Geocodificação Reversa)
-            btnConfirmar.addEventListener('click', async function() {
-                const lat = document.getElementById('latDenuncia').value;
-                const lng = document.getElementById('lngDenuncia').value;
+            minimap.on('click', (e) => {
+                if (marcadorAtual) minimap.removeLayer(marcadorAtual);
+                marcadorAtual = L.marker(e.latlng, { icon: iconeVermelho }).addTo(minimap);
+                document.getElementById('latDenuncia').value = e.latlng.lat;
+                document.getElementById('lngDenuncia').value = e.latlng.lng;
+            });
+        }
+        setTimeout(() => minimap.invalidateSize(), 200);
+    });
 
-                if (!lat || !lng) {
-                    mostrarToast("Por favor, toque no mapa para marcar o local antes de confirmar.", "warning");
-                    return;
-                }
+    btnConfirmar.addEventListener('click', async () => {
+        const lat = document.getElementById('latDenuncia').value;
+        const lng = document.getElementById('lngDenuncia').value;
+        if (!lat || !lng) {
+            mostrarToast('Toque no mapa para marcar o local antes de confirmar.', 'warning');
+            return;
+        }
+        inputLocalizacao.value = '📍 Buscando endereço...';
+        containerMinimapa.classList.add('d-none');
+        try {
+            const resp  = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+            const dados = await resp.json();
+            const rua    = dados.address.road || 'Rua não identificada';
+            const bairro = dados.address.suburb || dados.address.city_district || 'Tapera';
+            const endereco = `${rua}, ${bairro}`;
+            document.getElementById('enderecoConvertido').value = endereco;
+            inputLocalizacao.value = `📍 ${endereco}`;
+        } catch {
+            inputLocalizacao.value = '📍 Local marcado (Endereço offline)';
+            document.getElementById('enderecoConvertido').value = 'Coordenadas salvas no mapa';
+        }
+    });
 
-                // Dá um feedback visual enquanto o sistema pensa
-                inputLocalizacao.value = "📍 Buscando endereço..."; 
-                containerMinimapa.classList.add('d-none'); // Esconde o mapa
+    // ── Carregar lista da API ────────────────────────────────
+    async function carregarDenuncias() {
+        loadingLista.classList.remove('d-none');
+        listaDenuncias.innerHTML = '';
+        try {
+            const resp = await fetch(`${API_BASE}/denuncias?limit=10`);
+            const data = await resp.json();
+            renderizarLista(data.denuncias);
+            badgeTotal.textContent = data.total;
+        } catch {
+            mostrarToast('Não foi possível carregar as denúncias. Verifique se a API está rodando.', 'danger');
+        } finally {
+            loadingLista.classList.add('d-none');
+        }
+    }
 
-                try {
-                    // Chama a API para converter GPS em Endereço
-                    const resposta = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
-                    const dados = await resposta.json();
+    function renderizarLista(denuncias) {
+        listaDenuncias.innerHTML = '';
+        if (!denuncias.length) {
+            listaDenuncias.innerHTML = `<li class="list-group-item text-muted">Nenhuma denúncia registrada ainda.</li>`;
+            return;
+        }
+        denuncias.forEach(d => {
+            const statusMap = { aberta: 'danger', em_analise: 'warning', resolvida: 'success' };
+            const statusLabel = { aberta: 'Nova', em_analise: 'Em análise', resolvida: 'Resolvida' };
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center py-3';
+            li.innerHTML = `
+                <div class="pe-3">
+                    <strong class="fs-6 text-dark">${d.titulo}</strong><br>
+                    <span class="text-muted small">${d.tipo}</span><br>
+                    <span style="color:#333; font-size:.9rem;">${d.localizacao}</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <span class="badge bg-${statusMap[d.status] || 'secondary'}">${statusLabel[d.status] || d.status}</span>
+                    <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${d.id}" aria-label="Excluir">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>`;
+            listaDenuncias.appendChild(li);
+        });
+    }
 
-                    // Pega o nome da rua ou um fallback caso seja uma área sem rua mapeada
-                    const rua = dados.address.road || "Rua não identificada";
-                    const bairro = dados.address.suburb || dados.address.city_district || "Tapera";
-                    const enderecoReal = `${rua}, ${bairro}`;
+    // ── Enviar denúncia para a API ───────────────────────────
+    formDenuncia.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-                    // Salva no campo oculto e mostra no input para o usuário
-                    document.getElementById('enderecoConvertido').value = enderecoReal;
-                    inputLocalizacao.value = `📍 ${enderecoReal}`;
-                } catch (erro) {
-                    console.error("Erro na busca de endereço:", erro);
-                    inputLocalizacao.value = "📍 Local marcado (Endereço offline)";
-                    document.getElementById('enderecoConvertido').value = "Coordenadas salvas no mapa";
-                }
+        const titulo    = document.getElementById('tituloDenuncia').value.trim();
+        const tipo      = document.getElementById('tipoDenuncia').value;
+        const referencia = document.getElementById('referenciaDenuncia').value.trim();
+        const descricao = document.getElementById('descricaoDenuncia').value.trim();
+        const lat       = document.getElementById('latDenuncia').value;
+        const lng       = document.getElementById('lngDenuncia').value;
+        const endereco  = document.getElementById('enderecoConvertido').value;
+
+        if (!lat || !lng) {
+            mostrarToast('Clique no campo de localização e marque no mapa!', 'warning');
+            return;
+        }
+
+        const localizacaoFinal = referencia ? `${endereco} (${referencia})` : endereco;
+
+        const payload = { titulo, tipo, descricao, lat, lng, localizacao: localizacaoFinal, referencia };
+
+        // Botão de loading
+        btnEnviar.disabled = true;
+        btnEnviar.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Enviando...`;
+
+        try {
+            const resp = await fetch(`${API_BASE}/denuncias`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            // --- FUNÇÕES GERAIS DE DADOS ---
-            function obterDenunciasSalvas() {
-                try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } 
-                catch { return []; }
+            if (!resp.ok) {
+                const err = await resp.json();
+                throw new Error(err.erro || 'Erro ao enviar.');
             }
 
-            function salvarDenuncias(lista) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-            }
+            mostrarToast('Denúncia registrada com sucesso!', 'success');
+            formDenuncia.reset();
+            inputLocalizacao.value = '';
+            document.getElementById('enderecoConvertido').value = '';
+            if (marcadorAtual) minimap?.removeLayer(marcadorAtual);
+            await carregarDenuncias();
 
-            function renderizarDenuncias() {
-                const denuncias = obterDenunciasSalvas();
-                listaDenuncias.innerHTML = '';
+        } catch (err) {
+            mostrarToast(`Erro: ${err.message}`, 'danger');
+        } finally {
+            btnEnviar.disabled = false;
+            btnEnviar.innerHTML = `<i class="bi bi-send-fill me-2"></i> Enviar Denúncia`;
+        }
+    });
 
-                if (!denuncias.length) {
-                    listaDenuncias.innerHTML = `<li class="list-group-item text-muted">Nenhuma denúncia registrada ainda.</li>`;
-                    return;
-                }
+    // ── Excluir denúncia via API ─────────────────────────────
+    listaDenuncias.addEventListener('click', async (e) => {
+        const botao = e.target.closest('.btn-excluir');
+        if (!botao) return;
+        if (!confirm('Tem certeza que deseja excluir esta denúncia?')) return;
 
-                denuncias.slice().reverse().forEach(denuncia => {
-                    const li = document.createElement('li');
-                    // Adicionamos 'py-3' para dar um respiro maior entre os itens na tela do celular
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center py-3';
+        const id = botao.dataset.id;
+        try {
+            const resp = await fetch(`${API_BASE}/denuncias/${id}`, { method: 'DELETE' });
+            if (!resp.ok) throw new Error('Falha ao excluir.');
+            mostrarToast('Denúncia excluída.', 'secondary');
+            await carregarDenuncias();
+        } catch {
+            mostrarToast('Erro ao excluir a denúncia.', 'danger');
+        }
+    });
 
-                    li.innerHTML = `
-                        <div class="pe-3">
-                            <strong class="fs-5 text-dark">${denuncia.titulo}</strong><br>
-                            
-                            <span style="color: #333; font-size: 1rem;">
-                                ${denuncia.localizacao}
-                            </span>
-                        </div>
-                        
-                        <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                            <span class="badge bg-danger">Nova</span>
-                            <button class="btn btn-danger btn-excluir" data-id="${denuncia.id}" aria-label="Excluir">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    `;
-
-                    listaDenuncias.appendChild(li);
-                });
-            }
-
-            // --- SALVAR A DENÚNCIA ---
-            formDenuncia.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const titulo = document.getElementById('tituloDenuncia').value.trim();
-                const tipo = document.getElementById('tipoDenuncia').value;
-                const referencia = document.getElementById('referenciaDenuncia').value.trim();
-                const descricao = document.getElementById('descricaoDenuncia').value.trim();
-                
-                const lat = document.getElementById('latDenuncia').value;
-                const lng = document.getElementById('lngDenuncia').value;
-                // Pega o endereço que a API retornou
-                const enderecoTexto = document.getElementById('enderecoConvertido').value;
-
-                // Validação
-                if (!titulo || !tipo || !descricao) {
-                    alert("Preencha todos os campos obrigatórios!"); 
-                    return;
-                }
-                if (!lat || !lng) {
-                    mostrarToast("Clique no campo de localização e marque no mapa!", "warning");
-                    return;
-                }
-
-                // Junta o endereço da API com a referência que o usuário digitou
-                const localizacaoFinal = referencia ? `${enderecoTexto} (${referencia})` : enderecoTexto;
-
-                const novaDenuncia = {
-                    id: Date.now(),
-                    titulo,
-                    tipo,
-                    localizacao: localizacaoFinal,
-                    descricao,
-                    lat: parseFloat(lat), 
-                    lng: parseFloat(lng), 
-                    data: new Date().toLocaleString('pt-BR')
-                };
-
-                const denuncias = obterDenunciasSalvas();
-                denuncias.push(novaDenuncia);
-                salvarDenuncias(denuncias);
-
-                mostrarToast("Denúncia enviada com sucesso!", "success");
-
-                formDenuncia.reset();
-                inputLocalizacao.value = ""; 
-                document.getElementById('enderecoConvertido').value = ""; // Limpa também o oculto
-                if (marcadorAtual) minimap.removeLayer(marcadorAtual); 
-                renderizarDenuncias();
-            });
-
-            // --- EXCLUIR A DENÚNCIA ---
-            listaDenuncias.addEventListener('click', function(e) {
-                const botao = e.target.closest('.btn-excluir');
-                if (!botao) return;
-
-                const temCerteza = confirm("Tem certeza que deseja excluir esta denúncia?");
-                if (!temCerteza) return;
-
-                const id = Number(botao.dataset.id);
-                let denuncias = obterDenunciasSalvas();
-
-                denuncias = denuncias.filter(d => d.id !== id);
-                salvarDenuncias(denuncias);
-
-                renderizarDenuncias();
-            });
-
-            document.addEventListener('DOMContentLoaded', renderizarDenuncias);
-        </script>
-
-        <!-- RODAPÉ -->
-        <footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
-            <div class="container">
-                <p class="mb-0">&copy; 2026 Sustentabilidade Tapera - Projeto ODS 6</p>
-                <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
-            </div>
-        </footer>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    // ── Inicializar ──────────────────────────────────────────
+    carregarDenuncias();
+</script>
+</body>
 </html>
