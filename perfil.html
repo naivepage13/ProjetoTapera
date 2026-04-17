@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Sustentabilidade Tapera - ODS 6</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
@@ -12,17 +11,15 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: var(--dark-color);">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--dark-color);">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="index.html">
             <img src="img/Logo_cor_branca.png" alt="Logo Tapera" class="navbar-logo">
             Sustentabilidade Tapera
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
@@ -32,7 +29,7 @@
                 <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="ambiental.html">Ambiental</a></li>
                 <li class="nav-item"><a class="nav-link" href="cadastro.html">Cadastro</a></li>
-                <li class="nav-item"><a class="nav-link" href="contato.html">Contrato</a></li>
+                <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
                 <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
             </ul>
@@ -51,25 +48,31 @@
             <!-- FORMULÁRIO DE PERFIL -->
             <div class="col-lg-8">
                 <div class="card p-4 shadow-sm">
-                    <h4 class="card-title mb-3">Criar / Editar Perfil</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0" id="tituloFormulario">Criar Perfil</h4>
+                        <button id="btnCancelarEdicao" class="btn btn-sm btn-outline-secondary d-none">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar edição
+                        </button>
+                    </div>
 
                     <form id="perfilForm">
-                        <!-- campo oculto para saber se é edição -->
+                        <!-- ID oculto para edição -->
                         <input type="hidden" id="perfilId">
 
                         <div class="mb-3">
-                            <label for="nomePerfil" class="form-label">Nome completo</label>
+                            <label for="nomePerfil" class="form-label">Nome completo *</label>
                             <input type="text" class="form-control" id="nomePerfil" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="emailPerfil" class="form-label">E-mail</label>
+                            <label for="emailPerfil" class="form-label">E-mail *</label>
                             <input type="email" class="form-control" id="emailPerfil" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="telefonePerfil" class="form-label">Telefone</label>
-                            <input type="tel" class="form-control" id="telefonePerfil" placeholder="(xx) xxxxx-xxxx" maxlength="15">
+                            <input type="tel" class="form-control" id="telefonePerfil"
+                                placeholder="(xx) xxxxx-xxxx" maxlength="15">
                         </div>
 
                         <div class="mb-3">
@@ -77,34 +80,38 @@
                             <input type="text" class="form-control" id="bairroPerfil">
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" id="btnSalvar" class="btn btn-primary w-100">
                             <i class="bi bi-save me-2"></i> Salvar Perfil
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- LISTA DE PERFIS CADASTRADOS -->
+            <!-- LISTA DE PERFIS -->
             <div class="col-lg-4 mt-4 mt-lg-0">
                 <div class="card p-3 shadow-sm" style="background-color: var(--light-color);">
-                    <h5 class="card-title text-dark fw-bold mb-3">Perfis cadastrados</h5>
-                    <ul id="listaPerfis" class="list-group list-group-flush">
-                        <!-- preenchido via JavaScript -->
-                    </ul>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title text-dark fw-bold mb-0">Perfis cadastrados</h5>
+                        <span id="badgeTotal" class="badge bg-primary">0</span>
+                    </div>
+                    <div id="loadingPerfis" class="text-center py-3 text-muted small">
+                        <div class="spinner-border spinner-border-sm me-1"></div> Carregando...
+                    </div>
+                    <ul id="listaPerfis" class="list-group list-group-flush"></ul>
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 
 <footer class="py-4 text-white" style="background-color: var(--dark-color);">
     <div class="container">
-        <p class="mb-0">&copy; 2024 Projeto Sustentabilidade Tapera - ODS 6. Todos os direitos reservados.</p>
+        <p class="mb-0">&copy; 2026 Projeto Sustentabilidade Tapera - ODS 6. Todos os direitos reservados.</p>
         <p class="mb-0 small">Desenvolvido pelos alunos de ADS - UniSENAI.</p>
     </div>
 </footer>
 
+<!-- TOAST -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
     <div id="meuToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
@@ -115,200 +122,188 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-const STORAGE_PERFIS = 'perfisTapera';
-const formPerfil = document.getElementById('perfilForm');
-const listaPerfis = document.getElementById('listaPerfis');
-const inputId = document.getElementById('perfilId');
-const inputNome = document.getElementById('nomePerfil');
-const inputEmail = document.getElementById('emailPerfil');
-const inputTelefone = document.getElementById('telefonePerfil');
-const inputBairro = document.getElementById('bairroPerfil');
+    const API_BASE = 'http://localhost:3000/api';
 
-// ----- MÁSCARA DE TELEFONE -----
-inputTelefone.addEventListener('input', function (e) {
-    // Remove tudo o que não for número
-    let valor = e.target.value.replace(/\D/g, ''); 
-    
-    // Aplica a formatação (XX) XXXXX-XXXX
-    let formatado = '';
-    if (valor.length > 0) {
-        formatado = '(' + valor.substring(0, 2);
-    }
-    if (valor.length > 2) {
-        formatado += ') ' + valor.substring(2, 7);
-    }
-    if (valor.length > 7) {
-        formatado += '-' + valor.substring(7, 11);
-    }
-    
-    // Atualiza o valor no campo
-    e.target.value = formatado;
-});
+    // ── Elementos ────────────────────────────────────────────
+    const form              = document.getElementById('perfilForm');
+    const listaPerfis       = document.getElementById('listaPerfis');
+    const inputId           = document.getElementById('perfilId');
+    const inputNome         = document.getElementById('nomePerfil');
+    const inputEmail        = document.getElementById('emailPerfil');
+    const inputTelefone     = document.getElementById('telefonePerfil');
+    const inputBairro       = document.getElementById('bairroPerfil');
+    const btnSalvar         = document.getElementById('btnSalvar');
+    const btnCancelar       = document.getElementById('btnCancelarEdicao');
+    const tituloForm        = document.getElementById('tituloFormulario');
+    const badgeTotal        = document.getElementById('badgeTotal');
+    const loadingDiv        = document.getElementById('loadingPerfis');
 
-// ----- FUNÇÕES DE LOCALSTORAGE -----
-function obterPerfis() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_PERFIS)) || [];
-    } catch (e) {
-        console.error('Erro ao ler perfis', e);
-        return [];
-    }
-}
-
-function salvarPerfis(perfis) {
-    localStorage.setItem(STORAGE_PERFIS, JSON.stringify(perfis));
-}
-
-// ----- RENDERIZAR LISTA -----
-function renderizarPerfis() {
-    const perfis = obterPerfis();
-    listaPerfis.innerHTML = '';
-
-    if (!perfis.length) {
-        listaPerfis.innerHTML = `
-            <li class="list-group-item text-muted">
-                Nenhum perfil cadastrado ainda.
-            </li>
-        `;
-        return;
-    }
-
-    perfis.slice().reverse().forEach(perfil => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-start';
-
-        li.innerHTML = `
-            <div>
-                <strong>${perfil.nome}</strong><br>
-                <small class="text-muted">
-                    ${perfil.email || 'Sem e-mail'}<br>
-                    ${perfil.telefone || ''} ${perfil.bairro ? ' · ' + perfil.bairro : ''}
-                </small>
-            </div>
-            <div class="ms-2 d-flex flex-column gap-1">
-                <button class="btn btn-sm btn-outline-primary btn-editar-perfil" data-id="${perfil.id}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger btn-excluir-perfil" data-id="${perfil.id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        `;
-
-        listaPerfis.appendChild(li);
+    // ── Máscara de telefone ──────────────────────────────────
+    inputTelefone.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '');
+        let f = '';
+        if (v.length > 0) f = '(' + v.substring(0, 2);
+        if (v.length > 2) f += ') ' + v.substring(2, 7);
+        if (v.length > 7) f += '-' + v.substring(7, 11);
+        e.target.value = f;
     });
-}
 
-// ----- LIMPAR FORMULÁRIO -----
-function limparFormulario() {
-    inputId.value = '';
-    formPerfil.reset();
-}
-
-// ----- SUBMIT (CRIAR / EDITAR) -----
-formPerfil.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const nome = inputNome.value.trim();
-    const email = inputEmail.value.trim();
-    const telefone = inputTelefone.value.trim();
-    const bairro = inputBairro.value.trim();
-    const idExistente = inputId.value;
-
-    if (!nome || !email) {
-        mostrarToast('Preencha pelo menos Nome e E-mail.', "warning");
-        return;
+    // ── Toast ────────────────────────────────────────────────
+    function mostrarToast(mensagem, tipo = 'success') {
+        const toastEl  = document.getElementById('meuToast');
+        const toastMsg = document.getElementById('toastMensagem');
+        toastEl.className = `toast align-items-center border-0 text-bg-${tipo}`;
+        if (!['warning', 'light'].includes(tipo)) toastEl.classList.add('text-white');
+        toastMsg.textContent = mensagem;
+        new bootstrap.Toast(toastEl, { delay: 1700 }).show();
     }
 
-    let perfis = obterPerfis();
-
-    if (idExistente) {
-        // edição
-        const idNum = Number(idExistente);
-        perfis = perfis.map(p => 
-            p.id === idNum 
-                ? { ...p, nome, email, telefone, bairro }
-                : p
-        );
-        mostrarToast('Perfil atualizado com sucesso!', "success");
-    } else {
-        // novo cadastro
-        const novoPerfil = {
-            id: Date.now(),
-            nome,
-            email,
-            telefone,
-            bairro
-        };
-        perfis.push(novoPerfil);
-        mostrarToast('Perfil cadastrado com sucesso!', "success");
+    // ── Carregar perfis da API ───────────────────────────────
+    async function carregarPerfis() {
+        loadingDiv.classList.remove('d-none');
+        listaPerfis.innerHTML = '';
+        try {
+            const resp = await fetch(`${API_BASE}/perfis`);
+            const data = await resp.json();
+            badgeTotal.textContent = data.total;
+            renderizarPerfis(data.perfis);
+        } catch {
+            mostrarToast('Não foi possível carregar os perfis. Verifique se a API está rodando.', 'danger');
+        } finally {
+            loadingDiv.classList.add('d-none');
+        }
     }
 
-    salvarPerfis(perfis);
-    limparFormulario();
-    renderizarPerfis();
-});
-
-// ----- CLIQUES NA LISTA (EDITAR / EXCLUIR) -----
-listaPerfis.addEventListener('click', function(e) {
-    const btnEditar = e.target.closest('.btn-editar-perfil');
-    const btnExcluir = e.target.closest('.btn-excluir-perfil');
-
-    if (btnEditar) {
-        const id = Number(btnEditar.dataset.id);
-        const perfis = obterPerfis();
-        const perfil = perfis.find(p => p.id === id);
-        if (!perfil) return;
-
-        // Preenche o formulário para edição
-        inputId.value = perfil.id;
-        inputNome.value = perfil.nome;
-        inputEmail.value = perfil.email;
-        inputTelefone.value = perfil.telefone || '';
-        inputBairro.value = perfil.bairro || '';
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function renderizarPerfis(perfis) {
+        listaPerfis.innerHTML = '';
+        if (!perfis.length) {
+            listaPerfis.innerHTML = `<li class="list-group-item text-muted">Nenhum perfil cadastrado ainda.</li>`;
+            return;
+        }
+        perfis.forEach(p => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-start';
+            li.innerHTML = `
+                <div>
+                    <strong>${p.nome}</strong><br>
+                    <small class="text-muted">
+                        ${p.email}<br>
+                        ${p.telefone || ''}${p.bairro ? ' · ' + p.bairro : ''}
+                    </small>
+                </div>
+                <div class="ms-2 d-flex flex-column gap-1">
+                    <button class="btn btn-sm btn-outline-primary btn-editar" data-id="${p.id}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${p.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>`;
+            listaPerfis.appendChild(li);
+        });
     }
 
-    if (btnExcluir) {
-        const temCerteza = confirm("Tem certeza que deseja excluir este perfil? Esta ação não pode ser desfeita.");
-        
-        if (!temCerteza) return;
-
-        const id = Number(btnExcluir.dataset.id);
-        let perfis = obterPerfis();
-        perfis = perfis.filter(p => p.id !== id);
-        salvarPerfis(perfis);
-        renderizarPerfis();
-
-        mostrarToast("Perfil excluído com sucesso!", "danger");
-    }
-});
-
-// ----- FUNÇÃO PARA MOSTRAR O TOAST -----
-function mostrarToast(mensagem, tipo = 'success') {
-    const toastEl = document.getElementById('meuToast');
-    const toastMensagem = document.getElementById('toastMensagem');
-
-    toastEl.className = 'toast align-items-center border-0'; // Reseta as classes
-    toastEl.classList.add(`text-bg-${tipo}`);
-    
-    if(tipo !== 'warning' && tipo !== 'light') {
-        toastEl.classList.add('text-white');
+    // ── Limpar / cancelar edição ─────────────────────────────
+    function limparFormulario() {
+        inputId.value = '';
+        form.reset();
+        tituloForm.textContent = 'Criar Perfil';
+        btnSalvar.innerHTML = `<i class="bi bi-save me-2"></i> Salvar Perfil`;
+        btnCancelar.classList.add('d-none');
     }
 
-    toastMensagem.textContent = mensagem;
-        const toast = new bootstrap.Toast(toastEl, {
-        delay: 1700 
+    btnCancelar.addEventListener('click', limparFormulario);
+
+    // ── Submeter formulário (criar ou editar) ────────────────
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const nome     = inputNome.value.trim();
+        const email    = inputEmail.value.trim();
+        const telefone = inputTelefone.value.trim();
+        const bairro   = inputBairro.value.trim();
+        const id       = inputId.value;
+
+        if (!nome || !email) {
+            mostrarToast('Preencha pelo menos Nome e E-mail.', 'warning');
+            return;
+        }
+
+        btnSalvar.disabled = true;
+        btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Salvando...`;
+
+        const payload = { nome, email, telefone, bairro };
+        const url    = id ? `${API_BASE}/perfis/${id}` : `${API_BASE}/perfis`;
+        const method = id ? 'PUT' : 'POST';
+
+        try {
+            const resp = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+
+            if (!resp.ok) throw new Error(data.erro || 'Erro ao salvar.');
+
+            mostrarToast(data.mensagem, 'success');
+            limparFormulario();
+            await carregarPerfis();
+
+        } catch (err) {
+            mostrarToast(`Erro: ${err.message}`, 'danger');
+        } finally {
+            btnSalvar.disabled = false;
+            btnSalvar.innerHTML = `<i class="bi bi-save me-2"></i> Salvar Perfil`;
+        }
     });
-    toast.show();
-}
 
-// Inicializa a lista ao abrir a página
-document.addEventListener('DOMContentLoaded', renderizarPerfis);
+    // ── Cliques na lista (editar / excluir) ──────────────────
+    listaPerfis.addEventListener('click', async (e) => {
+        const btnEditar  = e.target.closest('.btn-editar');
+        const btnExcluir = e.target.closest('.btn-excluir');
+
+        // --- EDITAR: busca os dados na API e preenche o form ---
+        if (btnEditar) {
+            const id = btnEditar.dataset.id;
+            try {
+                const resp = await fetch(`${API_BASE}/perfis/${id}`);
+                const perfil = await resp.json();
+
+                inputId.value         = perfil.id;
+                inputNome.value       = perfil.nome;
+                inputEmail.value      = perfil.email;
+                inputTelefone.value   = perfil.telefone || '';
+                inputBairro.value     = perfil.bairro   || '';
+
+                tituloForm.textContent = 'Editar Perfil';
+                btnSalvar.innerHTML    = `<i class="bi bi-save me-2"></i> Atualizar Perfil`;
+                btnCancelar.classList.remove('d-none');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch {
+                mostrarToast('Erro ao carregar perfil para edição.', 'danger');
+            }
+            return;
+        }
+
+        // --- EXCLUIR ---
+        if (btnExcluir) {
+            if (!confirm('Tem certeza que deseja excluir este perfil?')) return;
+            const id = btnExcluir.dataset.id;
+            try {
+                const resp = await fetch(`${API_BASE}/perfis/${id}`, { method: 'DELETE' });
+                if (!resp.ok) throw new Error();
+                mostrarToast('Perfil excluído com sucesso!', 'danger');
+                await carregarPerfis();
+            } catch {
+                mostrarToast('Erro ao excluir o perfil.', 'danger');
+            }
+        }
+    });
+
+    // ── Inicializar ──────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', carregarPerfis);
 </script>
-
 </body>
 </html>

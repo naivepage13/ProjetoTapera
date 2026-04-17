@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Sustentabilidade Tapera - ODS 6</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
@@ -12,17 +11,15 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: var(--dark-color);">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--dark-color);">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="index.html">
             <img src="img/Logo_cor_branca.png" alt="Logo Tapera" class="navbar-logo">
             Sustentabilidade Tapera
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
@@ -32,7 +29,7 @@
                 <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="ambiental.html">Ambiental</a></li>
                 <li class="nav-item"><a class="nav-link" href="cadastro.html">Cadastro</a></li>
-                <li class="nav-item"><a class="nav-link" href="contato.html">Contrato</a></li>
+                <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
                 <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
             </ul>
@@ -40,36 +37,75 @@
     </div>
 </nav>
 
-
 <main class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow p-4" style="border-radius: var(--border-radius);">
                 <h2 class="fw-bold text-center mb-4">Criar Conta</h2>
-                <form>
+
+                <!-- Alerta de erro/sucesso -->
+                <div id="alerta" class="alert d-none mb-3" role="alert"></div>
+
+                <form id="cadastroForm" novalidate>
+
                     <div class="mb-3">
-                        <label class="form-label">Nome Completo</label>
-                        <input type="text" class="form-control" required>
+                        <label class="form-label">Nome Completo *</label>
+                        <input type="text" id="inputNome" class="form-control" required>
+                        <div class="invalid-feedback">Informe seu nome completo.</div>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">E-mail</label>
-                        <input type="email" class="form-control" required>
+                        <label class="form-label">E-mail *</label>
+                        <input type="email" id="inputEmail" class="form-control" required>
+                        <div class="invalid-feedback">Informe um e-mail válido.</div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Senha</label>
-                            <input type="password" class="form-control" required>
+                            <label class="form-label">Senha *</label>
+                            <div class="input-group">
+                                <input type="password" id="inputSenha" class="form-control" required minlength="6">
+                                <button type="button" class="btn btn-outline-secondary btn-ver-senha" data-alvo="inputSenha">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Mínimo 6 caracteres.</div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Confirmar Senha</label>
-                            <input type="password" class="form-control" required>
+                            <label class="form-label">Confirmar Senha *</label>
+                            <div class="input-group">
+                                <input type="password" id="inputConfirmar" class="form-control" required>
+                                <button type="button" class="btn btn-outline-secondary btn-ver-senha" data-alvo="inputConfirmar">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="termos">
-                        <label class="form-check-label small" for="termos">Concordo em compartilhar dados anonimizados para fins de pesquisa científica.</label>
+
+                    <!-- Indicador de força de senha -->
+                    <div class="mb-3">
+                        <div class="progress" style="height: 6px;">
+                            <div id="barraSenha" class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <small id="textoForcaSenha" class="text-muted"></small>
                     </div>
-                    <button type="submit" class="btn btn-success w-100" style="background-color: var(--secondary-color);">Cadastrar</button>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="termos">
+                        <label class="form-check-label small" for="termos">
+                            Concordo em compartilhar dados anonimizados para fins de pesquisa científica.
+                        </label>
+                    </div>
+
+                    <button type="submit" id="btnCadastrar" class="btn btn-success w-100"
+                        style="background-color: var(--secondary-color);">
+                        Cadastrar
+                    </button>
+
+                    <p class="text-center mt-3 mb-0 small">
+                        Já tem conta? <a href="login.html">Entrar</a>
+                    </p>
+
                 </form>
             </div>
         </div>
@@ -80,5 +116,116 @@
     <p class="mb-0">&copy; 2026 Sustentabilidade Tapera</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:3000/api';
+
+    const form          = document.getElementById('cadastroForm');
+    const btnCadastrar  = document.getElementById('btnCadastrar');
+    const alertaEl      = document.getElementById('alerta');
+    const inputSenha    = document.getElementById('inputSenha');
+    const barraSenha    = document.getElementById('barraSenha');
+    const textoForca    = document.getElementById('textoForcaSenha');
+
+    // ── Mostrar/ocultar senha ────────────────────────────────
+    document.querySelectorAll('.btn-ver-senha').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const alvo  = document.getElementById(btn.dataset.alvo);
+            const oculto = alvo.type === 'password';
+            alvo.type = oculto ? 'text' : 'password';
+            btn.querySelector('i').className = oculto ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+    });
+
+    // ── Indicador de força de senha ──────────────────────────
+    inputSenha.addEventListener('input', () => {
+        const v = inputSenha.value;
+        let pontos = 0;
+        if (v.length >= 6)  pontos++;
+        if (v.length >= 10) pontos++;
+        if (/[A-Z]/.test(v)) pontos++;
+        if (/[0-9]/.test(v)) pontos++;
+        if (/[^A-Za-z0-9]/.test(v)) pontos++;
+
+        const niveis = [
+            { pct: 0,   cor: '',          texto: '' },
+            { pct: 20,  cor: 'bg-danger', texto: 'Muito fraca' },
+            { pct: 40,  cor: 'bg-warning',texto: 'Fraca' },
+            { pct: 60,  cor: 'bg-info',   texto: 'Média' },
+            { pct: 80,  cor: 'bg-primary',texto: 'Forte' },
+            { pct: 100, cor: 'bg-success',texto: 'Muito forte' },
+        ];
+        const n = niveis[pontos];
+        barraSenha.style.width   = n.pct + '%';
+        barraSenha.className     = `progress-bar ${n.cor}`;
+        textoForca.textContent   = n.texto;
+    });
+
+    // ── Mostrar alerta ───────────────────────────────────────
+    function mostrarAlerta(mensagem, tipo = 'danger') {
+        alertaEl.className = `alert alert-${tipo}`;
+        alertaEl.textContent = mensagem;
+        alertaEl.classList.remove('d-none');
+        alertaEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ── Submit ───────────────────────────────────────────────
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertaEl.classList.add('d-none');
+
+        const nome          = document.getElementById('inputNome').value.trim();
+        const email         = document.getElementById('inputEmail').value.trim();
+        const senha         = inputSenha.value;
+        const confirmarSenha = document.getElementById('inputConfirmar').value;
+        const aceitaTermos  = document.getElementById('termos').checked;
+
+        // Validações no frontend
+        if (!nome || !email || !senha || !confirmarSenha) {
+            mostrarAlerta('Preencha todos os campos obrigatórios.');
+            return;
+        }
+        if (senha.length < 6) {
+            mostrarAlerta('A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+        if (senha !== confirmarSenha) {
+            mostrarAlerta('As senhas não coincidem.');
+            return;
+        }
+
+        btnCadastrar.disabled = true;
+        btnCadastrar.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Criando conta...`;
+
+        try {
+            const resp = await fetch(`${API_BASE}/auth/cadastro`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, email, senha, confirmarSenha, aceitaTermos })
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                mostrarAlerta(data.erro || 'Erro ao criar conta.');
+                return;
+            }
+
+            // Salva o token no navegador para manter a sessão
+            localStorage.setItem('tapera_token', data.token);
+            localStorage.setItem('tapera_usuario', JSON.stringify(data.usuario));
+
+            mostrarAlerta(`Conta criada com sucesso! Bem-vindo(a), ${data.usuario.nome}. Redirecionando...`, 'success');
+
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+
+        } catch {
+            mostrarAlerta('Não foi possível conectar à API. Verifique se o servidor está rodando.');
+        } finally {
+            btnCadastrar.disabled = false;
+            btnCadastrar.innerHTML = 'Cadastrar';
+        }
+    });
+</script>
 </body>
 </html>

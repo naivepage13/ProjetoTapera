@@ -7,22 +7,21 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: var(--dark-color);">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--dark-color);">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="index.html">
             <img src="img/Logo_cor_branca.png" alt="Logo Tapera" class="navbar-logo">
             Sustentabilidade Tapera
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
@@ -32,7 +31,7 @@
                 <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
                 <li class="nav-item"><a class="nav-link" href="ambiental.html">Ambiental</a></li>
                 <li class="nav-item"><a class="nav-link" href="cadastro.html">Cadastro</a></li>
-                <li class="nav-item"><a class="nav-link" href="contato.html">Contrato</a></li>
+                <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
                 <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
             </ul>
@@ -40,94 +39,120 @@
     </div>
 </nav>
 
-        <main class="secondary-page-content">
-            <div class="container py-5">
-                <h1 class="fw-bold mb-4 text-primary"><i class="bi bi-geo-alt-fill me-2"></i> Mapa Interativo de Ocorrências</h1>
-                <p class="lead">Visualize a rede de saneamento, estações de tratamento e os pontos de denúncia no bairro Tapera.</p>
+<main class="secondary-page-content">
+    <div class="container py-5">
+        <h1 class="fw-bold mb-4 text-primary">
+            <i class="bi bi-geo-alt-fill me-2"></i> Mapa Interativo de Ocorrências
+        </h1>
+        <p class="lead">Visualize a rede de saneamento, estações de tratamento e os pontos de denúncia no bairro Tapera.</p>
 
-                <div id="mapid"></div>
+        <!-- Barra de status da API -->
+        <div id="statusMapa" class="alert alert-info d-flex align-items-center gap-2 py-2 mb-3">
+            <div class="spinner-border spinner-border-sm"></div>
+            <span>Carregando denúncias do servidor...</span>
+        </div>
 
-                <div class="mt-4 p-3 bg-light rounded shadow-sm">
-                    <h5 class="fw-bold">Legenda</h5>
-                    <p><i class="bi bi-pin-map-fill text-primary me-2"></i> Azul: Rede de Saneamento / ETE (Pontos de Infraestrutura)</p>
-                    <p><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Vermelho: Denúncias Ativas</p>
-                </div>
-            </div>
-        </main>
+        <div id="mapid"></div>
 
-        
+        <div class="mt-4 p-3 bg-light rounded shadow-sm">
+            <h5 class="fw-bold">Legenda</h5>
+            <p class="mb-1"><i class="bi bi-pin-map-fill text-primary me-2"></i> Azul: Rede de Saneamento / ETE (Pontos de Infraestrutura)</p>
+            <p class="mb-0"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Vermelho: Denúncias Ativas
+                <span id="contadorDenuncias" class="badge bg-danger ms-2">0</span>
+            </p>
+        </div>
+    </div>
+</main>
 
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- RODAPÉ -->
+<footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
+    <div class="container">
+        <p class="mb-0">&copy; 2026 Sustentabilidade Tapera - Projeto ODS 6</p>
+        <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
+    </div>
+</footer>
 
-        <script>
-            // Inicialização do Mapa Leaflet
-            document.addEventListener('DOMContentLoaded', function() {
-                // CORRIGIDO: Centraliza a câmera do mapa exatamente no bairro da Tapera
-                var map = L.map('mapid').setView([-27.6810, -48.5620], 14); 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:3000/api';
 
-                // Camada de Satélite Híbrido do Google (Imagens reais + Nomes das ruas)
-                L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    attribution: '© Google Satélite'
-                }).addTo(map);
+    document.addEventListener('DOMContentLoaded', async function () {
 
-                // 1. PINOS FIXOS DA INFRAESTRUTURA (Azul) - Atualizado para a Tapera
-                var infraestrutura = [
-                    { coordenadas: [-27.697115, -48.516961], titulo: "Estação de Tratamento (ETE Portal do Ribeirão)", descricao: "Local central de tratamento da Tapera.", cor: 'blue' }
-                ];
+        // ── Inicializa o mapa ─────────────────────────────────
+        const map = L.map('mapid').setView([-27.6810, -48.5620], 14);
 
-                infraestrutura.forEach(function(ponto) {
-                    L.marker(ponto.coordenadas)
-                        .addTo(map)
-                        .bindPopup("<b>" + ponto.titulo + "</b><br>" + ponto.descricao);
-                });
+        L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Satélite'
+        }).addTo(map);
 
-                // 2. BUSCAR DENÚNCIAS REAIS DO LOCALSTORAGE (Pinos Vermelhos)
-                const STORAGE_KEY = 'denunciasTapera';
-                let denunciasSalvas = [];
-                try {
-                    denunciasSalvas = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                } catch {
-                    denunciasSalvas = [];
-                }
+        // ── Pinos fixos de infraestrutura (azul) ─────────────
+        const infraestrutura = [
+            {
+                coordenadas: [-27.697115, -48.516961],
+                titulo: "Estação de Tratamento (ETE Portal do Ribeirão)",
+                descricao: "Local central de tratamento da Tapera."
+            }
+        ];
 
-                // Configuração do pino vermelho
-                let iconeVermelho = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-                });
+        infraestrutura.forEach(ponto => {
+            L.marker(ponto.coordenadas)
+                .addTo(map)
+                .bindPopup(`<b>${ponto.titulo}</b><br>${ponto.descricao}`);
+        });
 
-                // Criar um pino para cada denúncia cadastrada
-                denunciasSalvas.forEach(function(denuncia) {
-                    
-                    // Verifica se a denúncia tem as coordenadas reais salvas (para não quebrar com denúncias antigas)
-                    if (denuncia.lat && denuncia.lng) {
-                        
-                        // Usa EXATAMENTE o local que o usuário clicou no minimapa!
-                        L.marker([denuncia.lat, denuncia.lng], {icon: iconeVermelho})
-                            .addTo(map)
-                            .bindPopup(`
-                                <span class="badge bg-danger mb-1">${denuncia.tipo}</span><br>
-                                <b>${denuncia.titulo}</b><br>
-                                <small class="text-muted"><i class="bi bi-geo-alt"></i> ${denuncia.localizacao}</small><br>
-                                <p class="mt-2 mb-0">${denuncia.descricao}</p>
-                                <small class="text-muted" style="font-size: 0.7em;">Registrado em: ${denuncia.data}</small>
-                            `);
-                    }
-                }); // Fim do forEach
-            }); // Fim do evento DOMContentLoaded
-        </script>
+        // ── Ícone vermelho para denúncias ─────────────────────
+        const iconeVermelho = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41],
+            popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
 
-        <!-- RODAPÉ -->
-        <footer class="py-4 text-white text-center" style="background-color: var(--dark-color);">
-            <div class="container">
-                <p class="mb-0">&copy; 2026 Sustentabilidade Tapera - Projeto ODS 6</p>
-                <p class="small mb-0">Desenvolvido por alunos de ADS - UniSENAI</p>
-            </div>
-        </footer>
+        const statusEl    = document.getElementById('statusMapa');
+        const contadorEl  = document.getElementById('contadorDenuncias');
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+        // ── Busca denúncias da API ────────────────────────────
+        try {
+            const resp = await fetch(`${API_BASE}/denuncias`);
+            if (!resp.ok) throw new Error(`Servidor retornou ${resp.status}`);
+
+            const data = await resp.json();
+            const denuncias = data.denuncias || [];
+
+            // Filtra só as que têm coordenadas válidas
+            const comCoordenadas = denuncias.filter(d => d.coordenadas?.lat && d.coordenadas?.lng);
+
+            comCoordenadas.forEach(denuncia => {
+                const { lat, lng } = denuncia.coordenadas;
+                const dataFormatada = new Date(denuncia.criadoEm).toLocaleString('pt-BR');
+
+                L.marker([lat, lng], { icon: iconeVermelho })
+                    .addTo(map)
+                    .bindPopup(`
+                        <span class="badge bg-danger mb-1">${denuncia.tipo}</span><br>
+                        <b>${denuncia.titulo}</b><br>
+                        <small class="text-muted"><i class="bi bi-geo-alt"></i> ${denuncia.localizacao}</small><br>
+                        <p class="mt-2 mb-0">${denuncia.descricao}</p>
+                        <small class="text-muted" style="font-size:0.7em;">Registrado em: ${dataFormatada}</small>
+                    `);
+            });
+
+            contadorEl.textContent = comCoordenadas.length;
+
+            // Atualiza barra de status com sucesso
+            statusEl.className = 'alert alert-success d-flex align-items-center gap-2 py-2 mb-3';
+            statusEl.innerHTML = `<i class="bi bi-check-circle-fill"></i>
+                <span>${comCoordenadas.length} denúncia(s) carregada(s) do servidor.</span>`;
+
+        } catch (erro) {
+            console.error('Erro ao buscar denúncias:', erro);
+            statusEl.className = 'alert alert-warning d-flex align-items-center gap-2 py-2 mb-3';
+            statusEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Não foi possível conectar à API. Verifique se o servidor está rodando em <code>localhost:3000</code>.</span>`;
+        }
+    });
+</script>
+</body>
 </html>
