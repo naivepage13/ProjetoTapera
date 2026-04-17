@@ -1,0 +1,18 @@
+[
+  {
+    "id": "01370e96-c027-4b78-9496-59c4a9ccfff0",
+    "titulo": "aaaa",
+    "tipo": "Vazamento de Água (Rede Pública)",
+    "descricao": "llllllllll",
+    "localizacao": "Rodovia Açoriana, Tapera da Base (ooi)",
+    "referencia": "ooi",
+    "fotoUrl": null,
+    "coordenadas": {
+      "lat": -27.689999752626438,
+      "lng": -48.55759438027417
+    },
+    "status": "aberta",
+    "criadoEm": "2026-04-17T00:35:52.778Z",
+    "atualizadoEm": "2026-04-17T00:35:52.778Z"
+  }
+]

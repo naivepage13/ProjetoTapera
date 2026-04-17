@@ -1,0 +1,24 @@
+[
+  {
+    "id": "43382c6c-014a-4054-9902-e16acd537909",
+    "titulo": "aaaaaaaaa",
+    "conteudo": "aaaaaaaa",
+    "autorId": "usuario_local_123",
+    "usuariosLike": [
+      "usuario_local_123"
+    ],
+    "usuariosDeslike": [],
+    "criadoEm": "2026-04-17T00:24:18.328Z"
+  },
+  {
+    "id": "2364961f-d2c0-458b-987a-3cd6f505732e",
+    "titulo": "teste",
+    "conteudo": "1111",
+    "autorId": "usuario_local_123",
+    "usuariosLike": [],
+    "usuariosDeslike": [
+      "usuario_local_123"
+    ],
+    "criadoEm": "2026-04-17T00:24:34.108Z"
+  }
+]
