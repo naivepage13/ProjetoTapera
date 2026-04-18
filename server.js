@@ -264,7 +264,7 @@ app.delete('/api/perfis/:id', (req, res) => {
 //  AUTENTICAÇÃO (Cadastro / Login)
 // ════════════════════════════════════════
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 
 const DB_USUARIOS  = path.join(__dirname, 'usuarios.json');
