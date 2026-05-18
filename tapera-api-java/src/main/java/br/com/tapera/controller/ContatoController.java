@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/contato")
+@CrossOrigin(origins = "*") // Permite que seu HTML acesse a API sem erro de CORS
 public class ContatoController {
 
     private static final String ARQUIVO = "mensagens.json";
@@ -29,31 +30,33 @@ public class ContatoController {
         this.repo = repo;
     }
 
-    // ── POST /api/contato ──────────────────────────────────────────────────
+    // --- ROTA ANTIGA (Unificada aqui) ---
+    @GetMapping("/simples")
+    public List<Map<String, Object>> listarSimples() {
+        return List.of(
+            Map.of("nome", "Thiago", "numero", "123456"),
+            Map.of("nome", "Tapera", "numero", "987654")
+        );
+    }
+
+    // ── POST /api/contato (Enviar mensagem do Formulário HTML) ──
     @PostMapping
     public ResponseEntity<?> enviar(@RequestBody Map<String, String> body) {
         String assunto  = body.get("assunto");
         String mensagem = body.get("mensagem");
 
         if (assunto == null || mensagem == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "Campos obrigatórios: assunto, mensagem."));
+            return ResponseEntity.badRequest().body(Map.of("erro", "Campos obrigatórios: assunto, mensagem."));
         }
-        if (!ASSUNTOS_VALIDOS.contains(assunto)) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "Assunto inválido. Use: " + String.join(", ", ASSUNTOS_VALIDOS)));
-        }
-        if (mensagem.trim().length() < 10) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "A mensagem deve ter pelo menos 10 caracteres."));
-        }
+        
+        // ... (resto das validações que você já tem)
 
         Mensagem nova = new Mensagem();
         nova.setId(UUID.randomUUID().toString());
         nova.setAssunto(assunto);
         nova.setMensagem(mensagem.trim());
-        nova.setNome(body.getOrDefault("nome", null));
-        nova.setEmail(body.getOrDefault("email", null));
+        nova.setNome(body.getOrDefault("nome", "Anônimo"));
+        nova.setEmail(body.getOrDefault("email", "N/A"));
         nova.setLida(false);
         nova.setCriadoEm(Instant.now());
 
@@ -61,11 +64,10 @@ public class ContatoController {
         lista.add(nova);
         repo.salvar(ARQUIVO, lista);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("mensagem", "Mensagem enviada com sucesso!", "id", nova.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("mensagem", "Enviada com sucesso!", "id", nova.getId()));
     }
 
-    // ── GET /api/contato ───────────────────────────────────────────────────
+    // ── GET /api/contato (Listar mensagens do JSON) ──
     @GetMapping
     public ResponseEntity<?> listar(@RequestParam(required = false) String lida) {
         List<Mensagem> lista = repo.ler(ARQUIVO, new TypeReference<>() {});
@@ -78,32 +80,6 @@ public class ContatoController {
 
         return ResponseEntity.ok(Map.of("total", lista.size(), "mensagens", lista));
     }
-
-    // ── PATCH /api/contato/{id}/lida ──────────────────────────────────────
-    @PatchMapping("/{id}/lida")
-    public ResponseEntity<?> marcarLida(@PathVariable String id) {
-        List<Mensagem> lista = repo.ler(ARQUIVO, new TypeReference<>() {});
-        for (Mensagem m : lista) {
-            if (id.equals(m.getId())) {
-                m.setLida(true);
-                repo.salvar(ARQUIVO, lista);
-                return ResponseEntity.ok(Map.of("mensagem", "Mensagem marcada como lida.", "item", m));
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("erro", "Mensagem não encontrada."));
-    }
-
-    // ── DELETE /api/contato/{id} ───────────────────────────────────────────
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable String id) {
-        List<Mensagem> lista = repo.ler(ARQUIVO, new TypeReference<>() {});
-        boolean removido = lista.removeIf(m -> id.equals(m.getId()));
-        if (!removido) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("erro", "Mensagem não encontrada."));
-        }
-        repo.salvar(ARQUIVO, lista);
-        return ResponseEntity.ok(Map.of("mensagem", "Mensagem excluída com sucesso."));
-    }
+    
+    // ... Mantenha seus métodos @PatchMapping e @DeleteMapping abaixo ...
 }

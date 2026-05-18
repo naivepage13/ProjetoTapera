@@ -1,0 +1,16 @@
+[ {
+  "id" : "e4517c05-facd-4632-912e-abb64e400f92",
+  "titulo" : "ghcg",
+  "tipo" : "Falta de Água",
+  "descricao" : "gcghc",
+  "localizacao" : "Rodovia Açoriana, Tapera da Base",
+  "referencia" : null,
+  "fotoUrl" : null,
+  "coordenadas" : {
+    "lat" : -27.68959469096523,
+    "lng" : -48.56160879135132
+  },
+  "status" : "aberta",
+  "criadoEm" : "2026-05-15T00:41:44.506560700Z",
+  "atualizadoEm" : "2026-05-15T00:41:44.506560700Z"
+} ]
