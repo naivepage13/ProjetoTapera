@@ -1,0 +1,4 @@
+[submodule "ProjetoTapera"]
+	path = ProjetoTapera
+	url = https://github.com/naivepage13/ProjetoTapera.git
+	branch = API_JAVA
